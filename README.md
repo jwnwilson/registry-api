@@ -27,6 +27,7 @@ POST /upload
 - Setup search endpoint
 - Design indexing logic (event bus? celery?)
 - Setup entity data migration logic for update and delete
+- Add Auth (decode /jwt token)
 
 # Requirements
 
