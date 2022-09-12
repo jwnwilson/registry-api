@@ -1,0 +1,24 @@
+version: '3'
+services:
+  api:
+    image: registry-api
+    build:
+      context: .
+      dockerfile: ./infra/docker/api.dockerfile
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+      - ./mypy.ini:/app/mypy.ini
+      # For local auth with aws, assuming credential file exists
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+    expose:
+      - "80"
+    ports:
+      - 0.0.0.0:8888:80
+    # Override lambda entry point to revert to default docker behaviour
+    entrypoint: ""
+    command: "uvicorn app.adapter.into.fastapi.main:app --host 0.0.0.0 --port 80 --reload --debug"
+
+
