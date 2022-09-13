@@ -4,21 +4,31 @@ services:
     image: registry-api
     build:
       context: .
-      dockerfile: ./infra/docker/api.dockerfile
+      dockerfile: ./infra/docker/api/Dockerfile
     tty: true
     env_file:
       - .env
     volumes:
-      - ./app:/app
-      - ./mypy.ini:/app/mypy.ini
+      - ./app:/src/app
+      - ./scripts:/src/scripts
+      - ./mypy.ini:/src/app/mypy.ini
       # For local auth with aws, assuming credential file exists
       - $HOME/.aws/credentials:/root/.aws/credentials:ro
     expose:
-      - "80"
+      - "8000"
     ports:
-      - 0.0.0.0:8888:80
-    # Override lambda entry point to revert to default docker behaviour
-    entrypoint: ""
-    command: "uvicorn app.adapter.into.fastapi.main:app --host 0.0.0.0 --port 80 --reload --debug"
-
-
+      - 0.0.0.0:8000:8000
+    command: "uvicorn app.adapter.into.fastapi.main:app --host 0.0.0.0 --port 8000 --reload --debug"
+    depends_on:
+      - db
+  db:
+    build: ./infra/docker/mongo
+    restart: always
+    volumes:
+      - ./infra/docker/mongo/data:/data/db
+    env_file:
+      - .env
+    expose:
+      - "27017"
+    ports:
+      - 0.0.0.0:27017:27017

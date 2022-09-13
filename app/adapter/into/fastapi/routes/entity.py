@@ -1,13 +1,12 @@
 import logging
 from typing import List
 
-from adapter.into.fastapi.dependencies import (
-    get_db_adapater,
-    get_current_user
-)
 from fastapi import APIRouter, Depends, HTTPException
-from ports.entity import Entity
-from use_case import entity
+from fastapi_pagination import Page, paginate
+
+from .....adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
+from .....ports.entity import EntityDTO
+from .....use_case import entity
 
 logger = logging.getLogger(__name__)
 
@@ -18,77 +17,52 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def list_entity(
-    db_adapter=Depends(get_db_adapater),
-    user=Depends(get_current_user)
-) -> List[dict]:
+@router.get("/", tags=["Entity"], response_model=Page[EntityDTO])
+def list_entity(
+    db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+) -> EntityDTO:
     # call create use case
-    data: List[dict] = entity.list(
-        db_adapter,
-        user
-    )
+    data: List[EntityDTO] = entity.list(db_adapter, user)
+    return paginate(data)
+
+
+@router.get("/{uuid}", tags=["Entity"])
+def get_entity(
+    uuid, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+) -> EntityDTO:
+    # call create use case
+    data: EntityDTO = entity.get(uuid, db_adapter, user)
     return data
 
 
-@router.get("/{uuid}")
-async def get_entity(
-    uuid,
+@router.post("/", tags=["Entity"])
+def create_entity(
+    entity: EntityDTO,
     db_adapter=Depends(get_db_adapater),
-    user=Depends(get_current_user)
-) -> List[dict]:
+    user=Depends(get_current_user),
+) -> EntityDTO:
     # call create use case
-    data: List[dict] = entity.get(
-        uuid,
-        db_adapter,
-        user
-    )
+    data: EntityDTO = entity.create(entity, db_adapter, user)
     return data
 
 
-
-@router.post("/")
-async def create_entity(
-    entity: Entity,
-    db_adapter=Depends(get_db_adapater),
-    user=Depends(get_current_user)
-) -> dict:
-    # call create use case
-    data: dict = entity.create(
-        entity,
-        db_adapter,
-        user
-    )
-    return data
-
-
-@router.patch("/{uuid}")
-async def create_entity(
+@router.patch("/{uuid}", tags=["Entity"])
+def create_entity(
     uuid: str,
-    entity: Entity,
+    entity: EntityDTO,
     db_adapter=Depends(get_db_adapater),
-    user=Depends(get_current_user)
-) -> dict:
+    user=Depends(get_current_user),
+) -> EntityDTO:
     entity.uuid = uuid
     # call create use case
-    data: dict = entity.patch(
-        entity,
-        db_adapter,
-        user
-    )
+    data: EntityDTO = entity.patch(entity, db_adapter, user)
     return data
 
 
-@router.delete("/{uuid}")
-async def delete_entity(
-    uuid: str,
-    db_adapter=Depends(get_db_adapater),
-    user=Depends(get_current_user)
+@router.delete("/{uuid}", tags=["Entity"])
+def delete_entity(
+    uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:
     # call create use case
-    entity.delete(
-        uuid,
-        db_adapter,
-        user
-    )
+    entity.delete(uuid, db_adapter, user)
     return None, 201

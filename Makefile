@@ -12,6 +12,15 @@ push:
 run:
 	${DOCKER_COMMAND} up
 
+debug:
+	${DOCKER_COMMAND} run --service-ports ${DOCKER_NAME}
+
+shell:
+	${DOCKER_COMMAND} run --service-ports ${DOCKER_NAME} bash
+
+reset_db:
+	${DOCKER_COMMAND} run db bash -c "rm -rf ./infra/docker/mongo/data"
+
 stop:
 	${DOCKER_COMMAND} down
 
