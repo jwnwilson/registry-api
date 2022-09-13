@@ -39,7 +39,6 @@ class CreateEntityTypeDTO(BaseModel):
 
 
 class UpdateEntityTypeDTO(BaseModel):
-    uuid: str
     name: Optional[str]
     fields: Optional[FieldType]
 

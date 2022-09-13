@@ -17,26 +17,27 @@ router = APIRouter(
 )
 
 
-@router.get("/", tags=["Entity"], response_model=Page[EntityDTO])
+@router.get("/{entity_type}", tags=["Entity"], response_model=Page[EntityDTO])
 def list_entity(
-    db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+    entity_type:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
     # call create use case
     data: List[EntityDTO] = entity.list(db_adapter, user)
     return paginate(data)
 
 
-@router.get("/{uuid}", tags=["Entity"])
+@router.get("/{entity_type}/{uuid}", tags=["Entity"])
 def get_entity(
-    uuid, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+    entity_type:str, uuid:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
     # call create use case
     data: EntityDTO = entity.get(uuid, db_adapter, user)
     return data
 
 
-@router.post("/", tags=["Entity"])
+@router.post("/{entity_type}", tags=["Entity"])
 def create_entity(
+    entity_type:str,
     entity: EntityDTO,
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
@@ -46,8 +47,9 @@ def create_entity(
     return data
 
 
-@router.patch("/{uuid}", tags=["Entity"])
+@router.patch("/{entity_type}/{uuid}", tags=["Entity"])
 def create_entity(
+    entity_type:str,
     uuid: str,
     entity: EntityDTO,
     db_adapter=Depends(get_db_adapater),
@@ -59,9 +61,9 @@ def create_entity(
     return data
 
 
-@router.delete("/{uuid}", tags=["Entity"])
+@router.delete("/{entity_type}/{uuid}", tags=["Entity"])
 def delete_entity(
-    uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+    entity_type:str, uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:
     # call create use case
     entity.delete(uuid, db_adapter, user)

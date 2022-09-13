@@ -50,15 +50,32 @@ class MongoDbAdapter(DbAdapter):
 
     def read(self, table: str, record_id: str) -> List[dict]:
         collection = self.client[DB][table]
-        record = collection.find({"uuid": record_id})
-        return next(record)
+        record = collection.find_one({"uuid": record_id})
+        if not record:
+            raise RecordNotFound(f"Record not found uuid: '{record_id}'")
+        return record
 
-    def create(self, table: str, data: dict) -> dict:
+    def create(self, table: str, record_data: dict) -> dict:
         collection = self.client[DB][table]
         try:
-            return collection.insert_one(data)
+            return collection.insert_one(record_data)
         except DuplicateKeyError:
-            uuid = data.get("uuid")
+            uuid = record_data.get("uuid")
             error = f"Duplicate record uuid: '{uuid}'"
             logger.info(error)
             raise DuplicateRecord(error)
+    
+    def delete(self, table: str, record_id: str):
+        collection = self.client[DB][table]
+        collection.delete_one({"uuid": record_id})
+
+    def update(self, table:str, record_id: str, record_data: dict) -> dict:
+        collection = self.client[DB][table]
+        record = collection.find_one({"uuid": record_id})
+        query = {
+            "uuid": record_id
+        }
+        # Remove empty keys to avoid overwritting empty data
+        record_data_with_values = dict((k, v) for k, v in record_data.items() if v)
+        record.update(record_data_with_values)
+        return collection.replace_one(query, record, upsert=True)

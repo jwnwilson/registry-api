@@ -1,12 +1,16 @@
 from sqlite3 import dbapi2
+import logging
 from typing import List
+from pydantic import ValidationError
 import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
-from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO
+from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
 
 TABLE = "entityType"
+
+logger = logging.getLogger(__name__)
 
 
 def list(
@@ -18,7 +22,38 @@ def list(
         organisation=user.organisation_id
     )
     data = db_adapter.list(TABLE, params)
-    return [EntityTypeDTO(**x) for x in data]
+    entity_types = []
+    for entity in data:
+        try:
+            entity_types.append(EntityTypeDTO(**entity))
+        except ValidationError:
+            uuid = entity.get("uuid")
+            logger.warn(f"Invalid record uuid: '{uuid}', skipping...")
+
+    return entity_types
+
+
+def read(
+    uuid:str, user: UserData, db_adapter: DbAdapter
+) -> List[EntityTypeDTO]:
+    data = db_adapter.read(TABLE, uuid)
+    return EntityTypeDTO(**data)
+
+
+def update(
+    uuid:str, entity_data: UpdateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
+) -> EntityTypeDTO:
+    update_data = entity_data.dict()
+    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
+    data = db_adapter.read(TABLE, uuid)
+    return EntityTypeDTO(**data)
+
+
+def delete(
+    uuid: str, user: UserData, db_adapter: DbAdapter
+) -> None:
+    db_adapter.delete(table=TABLE, record_id=uuid)
+    return
 
 
 def create(
@@ -29,6 +64,6 @@ def create(
     create_data["uuid"] = entity_uuid
     create_data["owner"] = user.user_id
     create_data["organisation"] = user.organisation_id
-    _id = db_adapter.create(TABLE, create_data)
+    _id = db_adapter.create(TABLE, record_data=create_data)
     data = db_adapter.read(TABLE, entity_uuid)
     return EntityTypeDTO(**data)
