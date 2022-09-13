@@ -18,8 +18,8 @@ debug:
 shell:
 	${DOCKER_COMMAND} run --service-ports ${DOCKER_NAME} bash
 
-reset_db:
-	${DOCKER_COMMAND} run db bash -c "rm -rf ./infra/docker/mongo/data"
+reset_db: stop
+	${DOCKER_COMMAND} run db bash -c "rm -rf /data/db/*"
 
 stop:
 	${DOCKER_COMMAND} down

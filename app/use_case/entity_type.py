@@ -3,7 +3,7 @@ from typing import List
 from domain import entity_type
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
-from ports.entity_type import EntityTypeDTO, QueryParam
+from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO
 
 
 def list(
@@ -22,7 +22,7 @@ def list(
 
 
 def create(
-    entity_data: EntityTypeDTO, user: UserData, db_adapter: DbAdapter
+    entity_data: CreateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityTypeDTO]:
     """[summary]
 

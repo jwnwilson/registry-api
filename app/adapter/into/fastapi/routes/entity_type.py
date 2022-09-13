@@ -4,7 +4,8 @@ from typing import List, Optional
 from adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
-from ports.entity_type import EntityTypeDTO, QueryParam
+from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO
+from adapter.out.db.exceptions import DuplicateRecord
 from use_case import entity_type
 
 logger = logging.getLogger(__name__)
@@ -42,12 +43,15 @@ def get_entity_type(
 
 @router.post("/", tags=["Entity Type"])
 def create_entity_type(
-    entity_type_data: EntityTypeDTO,
+    entity_type_data: CreateEntityTypeDTO,
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> dict:
     # call create use case
-    data: dict = entity_type.create(entity_type_data, db_adapter=db_adapter, user=user)
+    try:
+        data: dict = entity_type.create(entity_type_data, db_adapter=db_adapter, user=user)
+    except DuplicateRecord as err:
+        raise HTTPException(400, str(err))
     return data
 
 

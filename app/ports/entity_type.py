@@ -1,7 +1,17 @@
-from lib2to3.pgen2.token import OP
+from enum import Enum
+from pickletools import int4
 from typing import Optional
 
 from pydantic import BaseModel
+
+
+class FieldEnum(Enum):
+    string = 'string'
+    int = 'int'
+    float = 'float'
+
+
+FieldType = dict[str, FieldEnum]
 
 
 class QueryParam(BaseModel):
@@ -13,21 +23,26 @@ class EntityTypeDTO(BaseModel):
     name: str
     uuid: str
     owner: str
-    organisation: str
-    fields: dict
+    organisation: Optional[str]
+    fields: FieldType
+
+    class Config:  
+        use_enum_values = True
 
 
 class CreateEntityTypeDTO(BaseModel):
     name: str
-    owner: str
-    organisation: str
-    fields: dict
+    fields: FieldType
+
+    class Config:  
+        use_enum_values = True
 
 
 class UpdateEntityTypeDTO(BaseModel):
-    name: Optional[str]
     uuid: str
-    owner: Optional[str]
-    organisation: Optional[str]
-    fields: Optional[dict]
+    name: Optional[str]
+    fields: Optional[FieldType]
+
+    class Config:  
+        use_enum_values = True
 
