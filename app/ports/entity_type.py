@@ -41,6 +41,8 @@ class CreateEntityTypeDTO(BaseModel):
 class UpdateEntityTypeDTO(BaseModel):
     name: Optional[str]
     fields: Optional[FieldType]
+    owner: Optional[str]
+    organisation: Optional[str]
 
     class Config:  
         use_enum_values = True
