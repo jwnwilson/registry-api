@@ -3,14 +3,20 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class CreateEntityTypeDTO(BaseModel):
+class CreateEntityPostDTO(BaseModel):
     name: str
-    entity_type: str
-    fields: dict
+    fields: Optional[dict]
     links: Optional[List[str]]
 
 
-class UpdateEntityTypeDTO(BaseModel):
+class CreateEntityDTO(BaseModel):
+    name: str
+    entity_type: str
+    fields: Optional[dict]
+    links: Optional[List[str]]
+
+
+class UpdateEntityDTO(BaseModel):
     name: Optional[str]
     fields: Optional[dict]
     links: Optional[List[str]]
@@ -22,6 +28,8 @@ class QueryParam(BaseModel):
     name: Optional[str]
     entity_type: Optional[str]
     uuid: Optional[str]
+    limit: Optional[int]
+    filters: Optional[dict]
 
 
 class EntityDTO(BaseModel):
@@ -29,6 +37,6 @@ class EntityDTO(BaseModel):
     entity_type: str
     uuid: str
     owner: str
-    organisation: str
+    organisation: Optional[str]
     fields: dict
     links: List[str]

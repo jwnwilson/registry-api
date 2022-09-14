@@ -30,7 +30,6 @@ def delete(
     return entity_type.delete(uuid, user=user, db_adapter=db_adapter)
 
 
-
 def create(
     entity_data: CreateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityTypeDTO]:

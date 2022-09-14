@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
 
 from .....adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
-from .....ports.entity import EntityDTO, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from .....ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityDTO, QueryParam
 from .....use_case import entity as entity_uc
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,10 @@ router = APIRouter(
 def list_entity(
     entity_type:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
-    data: List[EntityDTO] = entity_uc.list(db_adapter=db_adapter, user=user)
+    query_param: QueryParam = QueryParam(
+        entity_type=entity_type
+    )
+    data: List[EntityDTO] = entity_uc.list(query_param, db_adapter=db_adapter, user=user)
     return paginate(data)
 
 
@@ -36,19 +39,20 @@ def get_entity(
 @router.post("/{entity_type}", tags=["Entity"])
 def create_entity(
     entity_type:str,
-    entity_data: EntityDTO,
+    entity_data: CreateEntityPostDTO,
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> EntityDTO:
-    data: EntityDTO = entity_uc.create(entity_type=entity_type, entity_data=entity_data, db_adapter=db_adapter, user=user)
+    create_data: CreateEntityDTO = CreateEntityDTO(entity_type=entity_type, **entity_data.dict())
+    data: EntityDTO = entity_uc.create(entity_data=create_data, db_adapter=db_adapter, user=user)
     return data
 
 
 @router.patch("/{entity_type}/{uuid}", tags=["Entity"])
-def create_entity(
+def update_entity(
     entity_type:str,
     uuid: str,
-    entity_data: EntityDTO,
+    entity_data: UpdateEntityDTO,
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> EntityDTO:
