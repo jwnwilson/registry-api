@@ -7,7 +7,7 @@ from hex_lib.ports.user import UserData
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from .exceptions import DuplicateRecord
+from .exceptions import DuplicateRecord, RecordNotFound
 
 URI = "mongodb://%s:%s@%s:27017/%s?retryWrites=true&w=majority" % (
     os.environ["MONGO_USER"],

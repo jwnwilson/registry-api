@@ -4,6 +4,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
 
+from .....adapter.out.db.exceptions import DuplicateRecord
 from .....adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from .....ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityDTO, QueryParam
 from .....use_case import entity as entity_uc
@@ -44,7 +45,10 @@ def create_entity(
     user=Depends(get_current_user),
 ) -> EntityDTO:
     create_data: CreateEntityDTO = CreateEntityDTO(entity_type=entity_type, **entity_data.dict())
-    data: EntityDTO = entity_uc.create(entity_data=create_data, db_adapter=db_adapter, user=user)
+    try:
+        data: EntityDTO = entity_uc.create(entity_data=create_data, db_adapter=db_adapter, user=user)
+    except DuplicateRecord as err:
+        raise HTTPException(400, str(err))
     return data
 
 
@@ -60,10 +64,10 @@ def update_entity(
     return data
 
 
-@router.delete("/{entity_type}/{uuid}", tags=["Entity"])
+@router.delete("/{entity_type}/{uuid}", tags=["Entity"], status_code=201)
 def delete_entity(
     entity_type:str, uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:
     # call create use case
     entity_uc.delete(uuid=uuid, entity_type=entity_type, db_adapter=db_adapter, user=user)
-    return None, 201
+    return

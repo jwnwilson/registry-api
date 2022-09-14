@@ -5,7 +5,7 @@ import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
-from ports.entity import CreateEntityDTO, EntityDTO, QueryParam
+from ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
 
 
 TABLE = "entity"
@@ -50,3 +50,26 @@ def create(
     _id = db_adapter.create(TABLE, record_data=create_data)
     data = db_adapter.read(TABLE, entity_uuid)
     return EntityDTO(**data)
+
+
+def read(
+    uuid:str, entity_type:str, user: UserData, db_adapter: DbAdapter
+) -> List[EntityDTO]:
+    data = db_adapter.read(TABLE, uuid)
+    return EntityDTO(**data)
+
+
+def update(
+    uuid:str, entity_type: str, entity_data: UpdateEntityDTO, user: UserData, db_adapter: DbAdapter
+) -> EntityDTO:
+    update_data = entity_data.dict()
+    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
+    data = db_adapter.read(TABLE, uuid)
+    return EntityDTO(**data)
+
+
+def delete(
+    uuid: str, entity_type: str, user: UserData, db_adapter: DbAdapter
+) -> None:
+    db_adapter.delete(table=TABLE, record_id=uuid)
+    return

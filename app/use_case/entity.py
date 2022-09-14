@@ -14,21 +14,21 @@ def list(
 
 
 def read(
-    uuid:str, db_adapter: DbAdapter, user: UserData
+    uuid:str, entity_type: str, db_adapter: DbAdapter, user: UserData
 ) -> List[EntityDTO]:
-    return entity.read(uuid, user=user, db_adapter=db_adapter)
+    return entity.read(uuid, entity_type, user=user, db_adapter=db_adapter)
 
 
 def update(
-    uuid:str, entity_data: UpdateEntityDTO, db_adapter: DbAdapter, user: UserData
+    uuid:str, entity_type: str, entity_data: UpdateEntityDTO, db_adapter: DbAdapter, user: UserData
 ) -> List[EntityDTO]:
-    return entity.update(uuid, entity_data=entity_data, user=user, db_adapter=db_adapter)
+    return entity.update(uuid, entity_type, entity_data=entity_data, user=user, db_adapter=db_adapter)
 
 
 def delete(
-    uuid:str, db_adapter: DbAdapter, user: UserData
+    uuid:str, entity_type: str, db_adapter: DbAdapter, user: UserData
 ) -> None:
-    return entity.delete(uuid, user=user, db_adapter=db_adapter)
+    return entity.delete(uuid, entity_type, user=user, db_adapter=db_adapter)
 
 
 def create(

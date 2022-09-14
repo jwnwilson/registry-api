@@ -20,8 +20,6 @@ class UpdateEntityDTO(BaseModel):
     name: Optional[str]
     fields: Optional[dict]
     links: Optional[List[str]]
-    owner: Optional[str]
-    organisation: Optional[str]
 
 
 class QueryParam(BaseModel):
