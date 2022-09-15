@@ -1,17 +1,51 @@
 from typing import List
 import logging
 from pydantic import ValidationError
+from jsonschema import validate
 import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
 from ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
-
+from ports.entity_type import EntityTypeDTO
+from .entity_type import TABLE as ENTITY_TYPE_TABLE
 
 TABLE = "entity"
 
 logger = logging.getLogger(__name__)
 
+
+def _validate_fields(entity_data: CreateEntityDTO, db_adapter: DbAdapter):
+    if not entity_data.fields:
+        return
+
+    # Get entity type for entity
+    param = ListParams(
+        filters={"name": entity_data.entity_type}
+    )
+    entity_types = db_adapter.list(ENTITY_TYPE_TABLE, param)
+    entity_types_len = len(entity_types)
+    assertion_error_msg = f"Entity Type: {entity_data.entity_type} has {entity_types_len} records, 1 expected"
+    assert entity_types_len == 1, assertion_error_msg
+
+    entity_type: EntityTypeDTO = EntityTypeDTO(
+        **entity_types[0]
+    )
+
+    entity_type_data = entity_type.dict()
+
+    # build properties from entity field data
+    for key in entity_type_data["fields"]:
+        field_dict = entity_type_data["fields"][key]
+        entity_type_data["fields"][key] = {k: v for k,v in field_dict.items() if k not in ["required", "choices"]}
+
+    # Validate Fields
+    schema = {
+        "type" : "object",
+        "properties" : entity_type_data["fields"],
+    }
+    validate(instance=entity_data.fields, schema=schema)
+        
 
 def list(
     query_param: QueryParam, user: UserData, db_adapter: DbAdapter
@@ -41,12 +75,14 @@ def list(
 def create(
     entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityDTO]:
+    _validate_fields(entity_data, db_adapter)
+
     create_data = entity_data.dict()
     entity_uuid = str(uuid.uuid4())
     create_data["uuid"] = entity_uuid
     create_data["owner"] = user.user_id
     create_data["organisation"] = user.organisation_id
-    print(create_data)
+
     _id = db_adapter.create(TABLE, record_data=create_data)
     data = db_adapter.read(TABLE, entity_uuid)
     return EntityDTO(**data)
@@ -62,6 +98,7 @@ def read(
 def update(
     uuid:str, entity_type: str, entity_data: UpdateEntityDTO, user: UserData, db_adapter: DbAdapter
 ) -> EntityDTO:
+    _validate_fields(entity_data, db_adapter)
     update_data = entity_data.dict()
     _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
     data = db_adapter.read(TABLE, uuid)

@@ -1,17 +1,28 @@
 from enum import Enum
-from pickletools import int4
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
 
 class FieldEnum(Enum):
     string = 'string'
-    int = 'int'
-    float = 'float'
+    number = 'number'
+    url = 'url'
+    enum = 'enum'
 
 
-FieldType = dict[str, FieldEnum]
+class FieldAttr(BaseModel):
+    type: FieldEnum
+    default: Optional[str]
+    description: Optional[str]
+    choices: Optional[List[str]]
+    required: bool = False
+
+    class Config:  
+        use_enum_values = True
+
+
+FieldType = dict[str, FieldAttr]
 
 
 class QueryParam(BaseModel):
