@@ -2,6 +2,7 @@ from typing import List
 import logging
 from pydantic import ValidationError
 from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
@@ -9,6 +10,7 @@ from hex_lib.ports.user import UserData
 from ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
 from ports.entity_type import EntityTypeDTO
 from .entity_type import TABLE as ENTITY_TYPE_TABLE
+from .exceptions import EntityValidationError
 
 TABLE = "entity"
 
@@ -16,9 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 def _validate_fields(entity_data: CreateEntityDTO, db_adapter: DbAdapter):
-    if not entity_data.fields:
-        return
-
     # Get entity type for entity
     param = ListParams(
         filters={"name": entity_data.entity_type}
@@ -33,18 +32,24 @@ def _validate_fields(entity_data: CreateEntityDTO, db_adapter: DbAdapter):
     )
 
     entity_type_data = entity_type.dict()
+    required = []
 
     # build properties from entity field data
     for key in entity_type_data["fields"]:
         field_dict = entity_type_data["fields"][key]
+        required += [key] if field_dict["required"] else []
         entity_type_data["fields"][key] = {k: v for k,v in field_dict.items() if k not in ["required", "choices"]}
 
     # Validate Fields
     schema = {
         "type" : "object",
         "properties" : entity_type_data["fields"],
+        "required": required
     }
-    validate(instance=entity_data.fields, schema=schema)
+    try:
+        validate(instance=entity_data.fields, schema=schema)
+    except ValidationError as err:
+        raise EntityValidationError(str(err))
         
 
 def list(
