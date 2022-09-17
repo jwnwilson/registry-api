@@ -1,12 +1,13 @@
 import logging
 from typing import List, Optional
 
-from adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
-from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
-from adapter.out.db.exceptions import DuplicateRecord
-from use_case import entity_type as entity_type_uc
+
+from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
+from app.ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from app.adapter.out.db.exceptions import DuplicateRecord
+from app.use_case import entity_type as entity_type_uc
 
 logger = logging.getLogger(__name__)
 

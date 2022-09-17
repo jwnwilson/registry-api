@@ -9,9 +9,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./app:/src/app
-      - ./scripts:/src/scripts
-      - ./mypy.ini:/src/app/mypy.ini
+      - ./src:/main/src
+      - ./scripts:/main/scripts
       # For local auth with aws, assuming credential file exists
       - $HOME/.aws/credentials:/root/.aws/credentials:ro
     expose:

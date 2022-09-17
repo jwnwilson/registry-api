@@ -20,14 +20,10 @@ POST /upload
 
 ## TODO
 
-- Setup docker compose with mongodb and fastapi
-- Create mongodb dbadapter
-- Create entitytype endpoints with mongodb adapter
-- Create entity endpoints with mongo db adapter
+- Setup entity data migration logic for update and delete
 - Add elasticsearch to dockercompose
 - Setup search endpoint
 - Design indexing logic (event bus? celery?)
-- Setup entity data migration logic for update and delete
 - Add Auth (decode /jwt token)
 
 # Requirements

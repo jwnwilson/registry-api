@@ -7,8 +7,9 @@ import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
-from ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
-from ports.entity_type import EntityTypeDTO
+
+from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
+from app.ports.entity_type import EntityTypeDTO
 from .entity_type import TABLE as ENTITY_TYPE_TABLE
 from .exceptions import EntityValidationError
 

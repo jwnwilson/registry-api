@@ -1,9 +1,10 @@
 from typing import List
 
-from domain import entity_type
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
-from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
+
+from app.domain import entity_type
+from app.ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
 
 
 def list(

@@ -4,11 +4,11 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
 
-from .....adapter.out.db.exceptions import DuplicateRecord
-from .....adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
-from .....domain.exceptions import EntityValidationError
-from .....ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityDTO, QueryParam
-from .....use_case import entity as entity_uc
+from app.adapter.out.db.exceptions import DuplicateRecord
+from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
+from app.domain.exceptions import EntityValidationError
+from app.ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityDTO, QueryParam
+from app.use_case import entity as entity_uc
 
 logger = logging.getLogger(__name__)
 

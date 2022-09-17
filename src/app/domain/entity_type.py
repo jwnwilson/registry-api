@@ -6,7 +6,8 @@ import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
-from ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
+
+from app.ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
 
 TABLE = "entityType"
 

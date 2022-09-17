@@ -1,12 +1,14 @@
 import os
 from distutils.command import upload
 
-from adapter.out.db import MongoDbAdapter
 from fastapi import Depends
 from fastapi.security import HTTPBasicCredentials, HTTPBearer
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
 from starlette.requests import Request
+
+from app.adapter.out.db import MongoDbAdapter
+
 
 ENVIRONMENT = os.environ["ENVIRONMENT"]
 

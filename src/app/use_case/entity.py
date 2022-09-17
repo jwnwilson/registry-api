@@ -3,8 +3,8 @@ from typing import List
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
 
-from ..domain import entity
-from ..ports.entity import EntityDTO, QueryParam, UpdateEntityDTO, CreateEntityDTO
+from app.domain import entity
+from app.ports.entity import EntityDTO, QueryParam, UpdateEntityDTO, CreateEntityDTO
 
 
 def list(

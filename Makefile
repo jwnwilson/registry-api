@@ -25,7 +25,7 @@ stop:
 	${DOCKER_COMMAND} down
 
 test:
-	${DOCKER_COMMAND} run ${DOCKER_NAME} bash -c "pytest app"
+	${DOCKER_COMMAND} run ${DOCKER_NAME} bash -c "pytest src"
 
 lint:
 	${DOCKER_COMMAND} run ${DOCKER_NAME} bash -c "scripts/lint.sh"
