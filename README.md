@@ -20,10 +20,13 @@ POST /upload
 
 ## TODO
 
+- Add search endpoint using nosql
+    - Search by field / links
 - Setup entity data migration logic for update and delete
+    - fastapi background task
+- Design search indexing / better data migration logic (event bus? celery?)
 - Add elasticsearch to dockercompose
-- Setup search endpoint
-- Design indexing logic (event bus? celery?)
+- Upgerade search endpoint with elasticsearch
 - Add Auth (decode /jwt token)
 
 # Requirements
