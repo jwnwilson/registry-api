@@ -16,6 +16,7 @@ router = APIRouter(
     prefix="/entity",
     dependencies=[],
     responses={404: {"description": "Not found"}},
+    redirect_slashes=True,
 )
 
 

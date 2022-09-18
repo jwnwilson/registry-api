@@ -1,8 +1,7 @@
 import os
-from distutils.command import upload
 
 from fastapi import Depends
-from fastapi.security import HTTPBasicCredentials, HTTPBearer
+from fastapi.security import HTTPBearer
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
 from starlette.requests import Request

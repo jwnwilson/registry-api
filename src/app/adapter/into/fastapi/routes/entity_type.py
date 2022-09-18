@@ -15,6 +15,7 @@ router = APIRouter(
     prefix="/entity-type",
     dependencies=[],
     responses={404: {"description": "Not found"}},
+    redirect_slashes=True,
 )
 
 
@@ -33,7 +34,7 @@ def list_entity_type(
     return paginate(data)
 
 
-@router.get("/{uuid}", tags=["Entity Type"])
+@router.get("/{uuid}/", tags=["Entity Type"])
 def get_entity_type(
     uuid, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityTypeDTO:
@@ -56,7 +57,7 @@ def create_entity_type(
     return data
 
 
-@router.patch("/{uuid}", tags=["Entity Type"])
+@router.patch("/{uuid}/", tags=["Entity Type"])
 def update_entity_type(
     uuid: str,
     entity_type_data: UpdateEntityTypeDTO,
@@ -68,7 +69,7 @@ def update_entity_type(
     return data
 
 
-@router.delete("/{uuid}", tags=["Entity Type"], status_code=201)
+@router.delete("/{uuid}/", tags=["Entity Type"], status_code=201)
 def delete_entity(
     uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:

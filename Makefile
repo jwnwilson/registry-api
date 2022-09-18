@@ -20,6 +20,7 @@ shell:
 
 reset_db: stop
 	${DOCKER_COMMAND} run db bash -c "rm -rf /data/db/*"
+	${DOCKER_COMMAND} run --service-ports db
 
 stop:
 	${DOCKER_COMMAND} down
