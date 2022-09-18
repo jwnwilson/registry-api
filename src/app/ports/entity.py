@@ -9,6 +9,13 @@ class CreateEntityPostDTO(BaseModel):
     links: Optional[List[str]]
 
 
+class UpdateEntityPatchDTO(BaseModel):
+    name: Optional[str]
+    fields: Optional[dict]
+    links: Optional[List[str]]
+
+
+
 class CreateEntityDTO(BaseModel):
     name: str
     entity_type: str
@@ -18,6 +25,7 @@ class CreateEntityDTO(BaseModel):
 
 class UpdateEntityDTO(BaseModel):
     name: Optional[str]
+    entity_type: str
     fields: Optional[dict]
     links: Optional[List[str]]
 

@@ -10,10 +10,10 @@ A project to act as a generic persistence layer with the following abilities.
 ## Endpoints
 
 POST/ GET/ PATCH/ DELETE /entityType/
-POST/ GET/ /entity/?type=uuid&limit=#
-GET/ PATCH/ DELETE /entity/<uuid>/
-GET/ /entity/search/?type=uuid&fields=address="test address"&links=<uuid>&limit=#
-POST /upload
+POST/ GET/ /entity/<type>/<uuid>/&limit=#
+GET/ PATCH/ DELETE /entity/<type>/<uuid>/
+GET/ /entity/<type>/search/?fields=address="test address"&links=<uuid>&limit=#
+POST /entity/<type>/upload
 
 ## Design
 
@@ -22,6 +22,9 @@ POST /upload
 
 - Add search endpoint using nosql
     - Search by field / links
+- Add bulk upload endpoint
+- Add uuid to fields for updating fields
+- Add tags / categories for entity types
 - Setup entity data migration logic for update and delete
     - fastapi background task
 - Design search indexing / better data migration logic (event bus? celery?)

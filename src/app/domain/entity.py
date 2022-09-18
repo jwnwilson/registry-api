@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 import logging
 from pydantic import ValidationError
 from jsonschema import validate
@@ -18,7 +18,7 @@ TABLE = "entity"
 logger = logging.getLogger(__name__)
 
 
-def _validate_fields(entity_data: CreateEntityDTO, db_adapter: DbAdapter):
+def _validate_fields(entity_data: Union[CreateEntityDTO, UpdateEntityDTO], db_adapter: DbAdapter):
     # Get entity type for entity
     param = ListParams(
         filters={"name": entity_data.entity_type}

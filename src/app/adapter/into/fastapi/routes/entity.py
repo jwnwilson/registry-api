@@ -7,7 +7,7 @@ from fastapi_pagination import Page, paginate
 from app.adapter.out.db.exceptions import DuplicateRecord
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain.exceptions import EntityValidationError
-from app.ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityDTO, QueryParam
+from app.ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityPatchDTO, UpdateEntityDTO, QueryParam
 from app.use_case import entity as entity_uc
 
 logger = logging.getLogger(__name__)
@@ -58,12 +58,16 @@ def create_entity(
 def update_entity(
     entity_type:str,
     uuid: str,
-    entity_data: UpdateEntityDTO,
+    entity_data: UpdateEntityPatchDTO,
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> EntityDTO:
     try:
-        data: EntityDTO = entity_uc.update(uuid=uuid, entity_type=entity_type, entity_data=entity_data, db_adapter=db_adapter, user=user)
+        update_entity_data: UpdateEntityDTO = UpdateEntityDTO(
+            entity_type=entity_type,
+            **entity_data.dict()
+        )
+        data: EntityDTO = entity_uc.update(uuid=uuid, entity_type=entity_type, entity_data=update_entity_data, db_adapter=db_adapter, user=user)
     except (DuplicateRecord, EntityValidationError)  as err:
         raise HTTPException(400, str(err))
     return data

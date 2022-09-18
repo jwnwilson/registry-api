@@ -50,27 +50,34 @@ def test_data(db, test_user):
     db.client[db.db]["entityType"].delete_many({})
     db.client[db.db]["entity"].delete_many({})
 
-    db.create("entityType", {
-        "name": "product",
-        "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
-        "owner": test_user.user_id,
-        "organisation": test_user.organisation_id,
-        "fields": {
-            "product_number": {
-                "type": "string",
-                "required": True
+    data = {
+        "entityType": {
+            "name": "product",
+            "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
+            "owner": test_user.user_id,
+            "organisation": test_user.organisation_id,
+            "fields": {
+                "product_number": {
+                    "type": "string",
+                    "required": True,
+                    "description": ""
+                }
             }
-        }
-    })
-
-    db.create("entity", {
-        "name": "knife",
-        "entity_type": "product",
-        "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
-        "owner": test_user.user_id,
-        "organisation": test_user.organisation_id,
-        "fields": {
-            "product_number": "12345"
         },
-        "links": []
-    })
+        "entity": {
+            "name": "knife",
+            "entity_type": "product",
+            "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
+            "owner": test_user.user_id,
+            "organisation": test_user.organisation_id,
+            "fields": {
+                "product_number": "12345"
+            },
+            "links": []
+        }
+    }
+
+    db.create("entityType", data["entityType"])
+    db.create("entity", data["entity"])
+
+    return data
