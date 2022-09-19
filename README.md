@@ -10,7 +10,7 @@ A project to act as a generic persistence layer with the following abilities.
 ## Endpoints
 
 POST/ GET/ PATCH/ DELETE /entityType/
-POST/ GET/ /entity/<type>/<uuid>/&limit=#
+POST/ GET/ /entity/<type>/<uuid>/
 GET/ PATCH/ DELETE /entity/<type>/<uuid>/
 GET/ /entity/<type>/search/?fields=address="test address"&links=<uuid>&limit=#
 POST /entity/<type>/upload
