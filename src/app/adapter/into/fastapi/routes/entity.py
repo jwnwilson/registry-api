@@ -16,11 +16,11 @@ router = APIRouter(
     prefix="/entity",
     dependencies=[],
     responses={404: {"description": "Not found"}},
-    redirect_slashes=True,
+    redirect_slashes=True
 )
 
 
-@router.get("/{entity_type}", tags=["Entity"], response_model=Page[EntityDTO])
+@router.get("/{entity_type}/", tags=["Entity"], response_model=Page[EntityDTO])
 def list_entity(
     entity_type:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
@@ -31,7 +31,7 @@ def list_entity(
     return paginate(data)
 
 
-@router.get("/{entity_type}/{uuid}", tags=["Entity"])
+@router.get("/{entity_type}/{uuid}/", tags=["Entity"])
 def get_entity(
     entity_type:str, uuid:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
@@ -39,7 +39,7 @@ def get_entity(
     return data
 
 
-@router.post("/{entity_type}", tags=["Entity"])
+@router.post("/{entity_type}/", tags=["Entity"])
 def create_entity(
     entity_type:str,
     entity_data: CreateEntityPostDTO,
@@ -54,7 +54,7 @@ def create_entity(
     return data
 
 
-@router.patch("/{entity_type}/{uuid}", tags=["Entity"])
+@router.patch("/{entity_type}/{uuid}/", tags=["Entity"])
 def update_entity(
     entity_type:str,
     uuid: str,
@@ -73,7 +73,7 @@ def update_entity(
     return data
 
 
-@router.delete("/{entity_type}/{uuid}", tags=["Entity"], status_code=201)
+@router.delete("/{entity_type}/{uuid}/", tags=["Entity"], status_code=201)
 def delete_entity(
     entity_type:str, uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:
