@@ -33,6 +33,8 @@ POST /entity/<type>/upload
 - Add elasticsearch to dockercompose
 - Upgerade search endpoint with elasticsearch
 - Add Auth (decode /jwt token)
+- Add infra pipeline (kubernetes?)
+- Add tests
 
 # Requirements
 
