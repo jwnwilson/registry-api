@@ -20,13 +20,14 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Setup linking uuid in linked entity
+- Setup linking uuid in linked entity (update both entities)
 - Add search endpoint using nosql
     - Search by field / links
 - Add bulk upload endpoint
+- Add bulk download endpoint
 - Add uuid to fields for updating fields
 - Add tags / categories for entity types
-- Setup entity data migration logic for update and delete
+- Setup entity data migration logic for update entity type
     - fastapi background task
 - Design search indexing / better data migration logic (event bus? celery?)
 - Add elasticsearch to dockercompose
