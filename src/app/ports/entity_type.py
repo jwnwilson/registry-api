@@ -4,15 +4,24 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 
-class FieldEnum(Enum):
+class DataEnum(Enum):
     string = 'string'
     number = 'number'
     url = 'url'
     enum = 'enum'
 
 
+class InputEnum(Enum):
+    text = 'text'
+    text_area = 'textArea'
+    select = 'select'
+    checkbox = 'checkbox'
+    radio = 'radio'
+
+
 class FieldAttr(BaseModel):
-    type: FieldEnum
+    data_type: DataEnum
+    input_type: InputEnum
     default: Optional[str]
     description: Optional[str]
     choices: Optional[List[str]]

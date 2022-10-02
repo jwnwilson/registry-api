@@ -20,6 +20,7 @@ POST /entity/<type>/upload
 
 ## TODO
 
+- Setup linking uuid in linked entity
 - Add search endpoint using nosql
     - Search by field / links
 - Add bulk upload endpoint
