@@ -20,13 +20,12 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Setup linking uuid in linked entity (update both entities)
-- Setup choice field linking to other entities
+- Setup back linking uuid in linked entity (update both entities)
+- Add bulk upload endpoint
+- Add bulk download endpoint
 - Filter by organisation (add default org for anonymous users)
 - Add search endpoint using nosql
     - Search by field / links
-- Add bulk upload endpoint
-- Add bulk download endpoint
 - Add uuid to fields for updating fields
 - Add tags / categories for entity types
 - Setup entity data migration logic for update entity type
