@@ -13,6 +13,7 @@ class LinkType(Enum):
 class Link(BaseModel):
     uuid: str
     direction : LinkType = LinkType.bi_directional
+    entity_type: str
 
     class Config:  
         use_enum_values = True
