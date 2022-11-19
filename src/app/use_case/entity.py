@@ -5,6 +5,7 @@ from hex_lib.ports.user import UserData
 
 from app.domain import entity
 from app.ports.entity import EntityDTO, QueryParam, UpdateEntityDTO, CreateEntityDTO
+from app.ports.file import FileDTO
 
 
 def list(
@@ -35,3 +36,10 @@ def create(
     entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityDTO]:
     return entity.create(entity_data, user=user, db_adapter=db_adapter)
+
+
+def create_entities_from_file(
+    entity_type: str, file: FileDTO, user: UserData, db_adapter: DbAdapter
+) -> List[EntityDTO]:
+    entities_dto: List[EntityDTO] = entity.parse_csv(entity_type, file, db_adapter)
+    return entity.create_entities(entities_dto, user=user, db_adapter=db_adapter)

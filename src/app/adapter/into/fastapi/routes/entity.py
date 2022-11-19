@@ -1,13 +1,14 @@
 import logging
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi_pagination import Page, paginate
 
 from app.adapter.out.db.exceptions import DuplicateRecord
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain.exceptions import EntityValidationError
 from app.ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityPatchDTO, UpdateEntityDTO, QueryParam
+from app.ports.file import FileDTO
 from app.use_case import entity as entity_uc
 
 logger = logging.getLogger(__name__)
@@ -80,3 +81,22 @@ def delete_entity(
     # call create use case
     entity_uc.delete(uuid=uuid, entity_type=entity_type, db_adapter=db_adapter, user=user)
     return
+
+
+@router.post("/{entity_type}/import/", tags=["Entity"])
+def import_entities(
+    entity_type:str, file: UploadFile, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
+) -> None:
+    valid_file_types = ["text/csv"]
+    if file.content_type not in valid_file_types:
+        raise HTTPException(400, detail="Invalid file type, valid types: {}".format(str(valid_file_types)))
+
+    # call create use case
+    fileDTO = FileDTO(
+        file=file.file,
+        filename=file.filename,
+        content_type=file.content_type
+    )
+    entity_uc.create_entities_from_file(entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user)
+    return
+

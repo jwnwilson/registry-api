@@ -10,6 +10,7 @@ from hex_lib.ports.user import UserData
 
 from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
 from app.ports.entity_type import EntityTypeDTO
+from app.ports.file import FileDTO
 from .entity_type import TABLE as ENTITY_TYPE_TABLE
 from .exceptions import EntityValidationError
 
@@ -116,3 +117,11 @@ def delete(
 ) -> None:
     db_adapter.delete(table=TABLE, record_id=uuid)
     return
+
+
+def parse_csv(entity_type:str, parse_csv: FileDTO, db_adapter: DbAdapter):
+    pass
+
+
+def create_entities(entity_data: List[CreateEntityDTO], db_adapter: DbAdapter):
+    pass

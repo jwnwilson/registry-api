@@ -1,0 +1,14 @@
+version: '3'
+services:
+  api:
+    volumes:
+      - ./src:/main/src
+      - ./scripts:/main/scripts
+      # For local auth with aws, assuming credential file exists
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+      # Mount hex lib that is expected to be in the same root folder as this project
+      - ../hex-lib:/main/hex-lib
+    command: bash -c "
+        poetry add --editable ./hex-lib && 
+        uvicorn app.adapter.into.fastapi.main:app --host 0.0.0.0 --port 8000 --reload --debug
+        "
