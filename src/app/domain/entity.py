@@ -25,17 +25,15 @@ def _validate_fields(
         user: UserData,
         db_adapter: DbAdapter):
     # Get entity type for entity
+    entity_type = entity_data[0].entity_type
     param = ListParams(
-        filters={"name": entity_data.entity_type}
+        filters={"name": entity_type}
     )
     entity_types = list_entity_types(param, user, db_adapter)
     entity_types_len = len(entity_types)
-    assertion_error_msg = f"Entity Type: {entity_data.entity_type} has {entity_types_len} records, 1 expected"
+    assertion_error_msg = f"Entity Type: {entity_type} has {entity_types_len} records, 1 expected"
     assert entity_types_len == 1, assertion_error_msg
-    
-    entity_type: EntityTypeDTO = EntityTypeDTO(
-        **entity_types[0]
-    )
+    entity_type: EntityTypeDTO = entity_types[0]
 
     entity_type_data = entity_type.dict()
     required = []
@@ -91,6 +89,7 @@ def _create_entity(entity_data: CreateEntityDTO, user: UserData, db_adapter: DbA
     create_data["owner"] = user.user_id
     create_data["organisation"] = user.organisation_id
 
+    breakpoint()
     _id = db_adapter.create(TABLE, record_data=create_data)
     return _id
 
@@ -130,14 +129,14 @@ def delete(
 
 
 def parse_json(entity_type:str, parse_json: FileDTO, user:UserData, db_adapter: DbAdapter):
-    reader = json.load(parse_json.file)
+    json_data = json.load(parse_json.file)
     entities = []
-    for row in reader:
+    for entity in json_data:
         entities.append(CreateEntityDTO(
-            name=row["name"],
+            name=entity["name"],
             entity_type=entity_type,
-            fields=row["fields"],
-            links=row["links"],
+            fields=entity.get("fields", []),
+            links=entity.get("links", []),
         ))
     _validate_fields(entities, user, db_adapter)
     return entities
