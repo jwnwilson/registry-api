@@ -9,7 +9,7 @@ import uuid
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
 
-from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
+from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO
 from app.ports.entity_type import EntityTypeDTO
 from app.ports.file import FileDTO
 from .entity_type import list as list_entity_types, read as read_entity_type

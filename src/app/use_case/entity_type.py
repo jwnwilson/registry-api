@@ -1,14 +1,14 @@
 from typing import List
 
-from hex_lib.ports.db import DbAdapter
+from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
 
 from app.domain import entity_type
-from app.ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from app.ports.entity_type import EntityTypeDTO, CreateEntityTypeDTO, UpdateEntityTypeDTO
 
 
 def list(
-    query_param: QueryParam, db_adapter: DbAdapter, user: UserData
+    query_param: ListParams, db_adapter: DbAdapter, user: UserData
 ) -> List[EntityTypeDTO]:
     return entity_type.list(query_param, user=user, db_adapter=db_adapter)
 
