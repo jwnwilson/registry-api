@@ -7,7 +7,7 @@ import uuid
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
 
-from app.ports.entity_type import EntityTypeDTO, QueryParam, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from app.ports.entity_type import EntityTypeDTO, CreateEntityTypeDTO, UpdateEntityTypeDTO
 
 TABLE = "entityType"
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def list(
-    query_param: QueryParam, user: UserData, db_adapter: DbAdapter
+    query_param: ListParams, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityTypeDTO]:
     params = ListParams(
         limit=query_param.limit,

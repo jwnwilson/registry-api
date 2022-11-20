@@ -86,8 +86,8 @@ def delete_entity(
 @router.post("/{entity_type}/import/", tags=["Entity"])
 def import_entities(
     entity_type:str, file: UploadFile, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
-) -> None:
-    valid_file_types = ["text/csv"]
+) -> List[EntityDTO]:
+    valid_file_types = ["application/json"]
     if file.content_type not in valid_file_types:
         raise HTTPException(400, detail="Invalid file type, valid types: {}".format(str(valid_file_types)))
 
@@ -97,6 +97,6 @@ def import_entities(
         filename=file.filename,
         content_type=file.content_type
     )
-    entity_uc.create_entities_from_file(entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user)
-    return
+    entities: List[EntityDTO] = entity_uc.create_entities_from_file(entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user)
+    return entities
 

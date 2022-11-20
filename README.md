@@ -20,9 +20,9 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Setup back linking uuid in linked entity (update both entities)
 - Add bulk upload endpoint
 - Add bulk download endpoint
+- Setup back linking uuid in linked entity (update both entities)
 - Filter by organisation (add default org for anonymous users)
 - Add search endpoint using nosql
     - Search by field / links

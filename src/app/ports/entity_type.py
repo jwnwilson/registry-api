@@ -34,11 +34,6 @@ class FieldAttr(BaseModel):
 FieldType = dict[str, FieldAttr]
 
 
-class QueryParam(BaseModel):
-    limit: Optional[int]
-    filters: Optional[dict]
-
-
 class EntityTypeDTO(BaseModel):
     name: str
     uuid: str
