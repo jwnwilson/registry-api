@@ -8,7 +8,7 @@ from hex_lib.adapter.out.db.exceptions import DuplicateRecord
 from hex_lib.ports.db import ListParams
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain.exceptions import EntityValidationError
-from app.ports.entity import EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityPatchDTO, UpdateEntityDTO
+from app.ports.entity import QueryParam, EntityDTO, CreateEntityDTO, CreateEntityPostDTO, UpdateEntityPatchDTO, UpdateEntityDTO
 from app.ports.file import FileDTO
 from app.use_case import entity as entity_uc
 
@@ -26,7 +26,7 @@ router = APIRouter(
 def list_entity(
     entity_type:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityDTO:
-    query_param: ListParams = ListParams(
+    query_param: QueryParam = QueryParam(
         entity_type=entity_type
     )
     data: List[EntityDTO] = entity_uc.list(query_param, db_adapter=db_adapter, user=user)
