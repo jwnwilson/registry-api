@@ -9,7 +9,7 @@ import uuid
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
 
-from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO
+from app.ports.entity import CreateEntityDTO, UpdateEntityDTO, EntityDTO, QueryParam
 from app.ports.entity_type import EntityTypeDTO
 from app.ports.file import FileDTO
 from .entity_type import list as list_entity_types, read as read_entity_type
@@ -58,7 +58,7 @@ def _validate_fields(
         
 
 def list(
-    query_param: ListParams, user: UserData, db_adapter: DbAdapter
+    query_param: QueryParam, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityDTO]:
 
     filters = query_param.filters or {}
@@ -82,16 +82,17 @@ def list(
     return entity_types
 
 
-def _create_entity(entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter) -> int:
+def _create_entity(entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter) -> EntityDTO:
     create_data = entity_data.dict()
     entity_uuid = str(uuid.uuid4())
     create_data["uuid"] = entity_uuid
     create_data["owner"] = user.user_id
     create_data["organisation"] = user.organisation_id
 
-    breakpoint()
-    _id = db_adapter.create(TABLE, record_data=create_data)
-    return _id
+    entity_data = db_adapter.create(TABLE, record_data=create_data)
+    return EntityDTO(
+        **entity_data
+    )
 
 
 def create(
@@ -99,10 +100,8 @@ def create(
 ) -> List[EntityDTO]:
     _validate_fields([entity_data], user, db_adapter)
 
-    entity_uuid = _create_entity(entity_data, user, db_adapter)
-    data = db_adapter.read(TABLE, entity_uuid)
-    return EntityDTO(**data)
-
+    entity_dto = _create_entity(entity_data, user, db_adapter)
+    return entity_dto
 
 def read(
     uuid:str, entity_type:str, user: UserData, db_adapter: DbAdapter
@@ -143,18 +142,10 @@ def parse_json(entity_type:str, parse_json: FileDTO, user:UserData, db_adapter: 
 
 
 def create_entities(entity_data: List[CreateEntityDTO], user:UserData, db_adapter: DbAdapter) -> List[EntityDTO]:
-    entity_uuids = []
+    entity_dtos = []
 
     for entity in entity_data:
-        entity_uuids.append(
+        entity_dtos.append(
             _create_entity(entity, user, db_adapter)
         )
-    
-    params = ListParams(
-        filters={
-            '_id':{"$in":entity_uuids}
-        },
-        organisation=user.organisation_id
-    )
-    entity_records: List[EntityDTO] = list(params, user, db_adapter)
-    return entity_records
+    return entity_dtos

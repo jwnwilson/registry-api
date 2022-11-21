@@ -1,5 +1,6 @@
 import logging
 from typing import List
+from json import JSONDecodeError
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi_pagination import Page, paginate
@@ -98,6 +99,9 @@ def import_entities(
         filename=file.filename,
         content_type=file.content_type
     )
-    entities: List[EntityDTO] = entity_uc.create_entities_from_file(entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user)
+    try:
+        entities: List[EntityDTO] = entity_uc.create_entities_from_file(entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user)
+    except JSONDecodeError as err:
+        raise HTTPException(400, str(err))
     return entities
 
