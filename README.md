@@ -20,13 +20,13 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Add bulk upload endpoint
-- Add bulk download endpoint
+- Add tests
 - Setup back linking uuid in linked entity (update both entities)
 - Filter by organisation (add default org for anonymous users)
 - Add search endpoint using nosql
     - Search by field / links
-- Add uuid to fields for updating fields
+- Add bulk download endpoint
+- Add updating field names logic (might need uuid to identify fields to update)
 - Add tags / categories for entity types
 - Setup entity data migration logic for update entity type
     - fastapi background task
@@ -35,7 +35,6 @@ POST /entity/<type>/upload
 - Upgerade search endpoint with elasticsearch
 - Add Auth (decode /jwt token)
 - Add infra pipeline (kubernetes?)
-- Add tests
 
 # Requirements
 
