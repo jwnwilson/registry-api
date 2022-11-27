@@ -18,7 +18,7 @@ variable "aws_secret_key" {
 }
 
 variable "project" {
-  default = "registry-service"
+  default = "registry-api"
 }
 
 variable "ecr_api_url" {}
@@ -28,7 +28,7 @@ variable "docker_tag" {
 }
 
 variable "domain" {
-  default = "registry-service.link"
+  default = "registry-api.jwnwilson.co.uk"
 }
 
 variable "api_subdomain" {
@@ -37,5 +37,5 @@ variable "api_subdomain" {
 
 variable "api_repo" {
   description = "Name of container image repository"
-  default     = "registry_service_api"
+  default     = "registry-api"
 }

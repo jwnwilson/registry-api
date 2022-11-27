@@ -18,5 +18,5 @@ variable "aws_secret_key" {
 }
 
 variable "project" {
-  default = "registry"
+  default = "registry-api"
 }
