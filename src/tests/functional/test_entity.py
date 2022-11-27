@@ -1,5 +1,5 @@
 def test_entity_list(client, test_data):
-    response = client.get("/entity/product")
+    response = client.get("/entity/product/")
     assert response.status_code == 200
     assert response.json() == {
         "items": [
@@ -21,8 +21,8 @@ def test_entity_list(client, test_data):
     }
 
 
-def test_entity_create(client, test_user):
-    response = client.post("/entity/product", json={
+def test_entity_create(client, test_user, test_data):
+    response = client.post("/entity/product/", json={
         "name": "spoon",
         "entity_type": "product",
         "owner": test_user.user_id,
@@ -38,7 +38,7 @@ def test_entity_create(client, test_user):
 
 def test_entity_update(client, test_data, test_user):
     entity_uuid = test_data["entity"]["uuid"]
-    response = client.patch(f"/entity/product/{entity_uuid}", json={
+    response = client.patch(f"/entity/product/{entity_uuid}/", json={
         "name": "spoon2",
         "entity_type": "product",
         "owner": test_user.user_id,
@@ -55,7 +55,7 @@ def test_entity_update(client, test_data, test_user):
 
 def test_entity_delete(client, test_data, test_user):
     entity_uuid = test_data["entity"]["uuid"]
-    response = client.delete(f"/entity/product/{entity_uuid}")
+    response = client.delete(f"/entity/product/{entity_uuid}/")
     assert response.status_code == 201, response.json()
 
     response = client.get("/entity/product")

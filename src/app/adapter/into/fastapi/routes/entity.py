@@ -49,7 +49,10 @@ def create_entity(
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> EntityDTO:
-    create_data: CreateEntityDTO = CreateEntityDTO(entity_type=entity_type, **entity_data.dict())
+    try:
+        create_data: CreateEntityDTO = CreateEntityDTO(entity_type=entity_type, **entity_data.dict())
+    except EntityValidationError as err:
+        raise HTTPException(400, str(err))
     try:
         data: EntityDTO = entity_uc.create(entity_data=create_data, db_adapter=db_adapter, user=user)
     except (DuplicateRecord, EntityValidationError) as err:

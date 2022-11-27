@@ -58,9 +58,10 @@ def test_data(db, test_user):
             "organisation": test_user.organisation_id,
             "fields": {
                 "product_number": {
-                    "type": "string",
-                    "required": True,
-                    "description": ""
+                    "input_type": "text",
+                    "data_type": "string",
+                    "description": "",
+                    "default": ""
                 }
             }
         },

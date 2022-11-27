@@ -31,10 +31,14 @@ def _validate_fields(
     )
     entity_types = list_entity_types(param, user, db_adapter)
     entity_types_len = len(entity_types)
-    assertion_error_msg = f"Entity Type: {entity_type} has {entity_types_len} records, 1 expected"
-    assert entity_types_len == 1, assertion_error_msg
-    entity_type: EntityTypeDTO = entity_types[0]
 
+    try:
+        assertion_error_msg = f"Unknown Entity Type: {entity_type}"
+        assert entity_types_len == 1, assertion_error_msg
+    except AssertionError as err:
+        raise EntityValidationError(str(err))
+    
+    entity_type: EntityTypeDTO = entity_types[0]
     entity_type_data = entity_type.dict()
     required = []
 

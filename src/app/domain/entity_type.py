@@ -27,9 +27,9 @@ def list(
     for entity in data:
         try:
             entity_types.append(EntityTypeDTO(**entity))
-        except ValidationError:
+        except ValidationError as err:
             uuid = entity.get("uuid")
-            logger.warn(f"Invalid record uuid: '{uuid}', skipping...")
+            logger.warn(f"Invalid record uuid: '{uuid}', error: {err}\n skipping...")
 
     return entity_types
 

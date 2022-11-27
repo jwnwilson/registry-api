@@ -10,32 +10,33 @@ def test_entity_type_list(client, test_data):
                 "organisation": None,
                 "fields": {
                     "product_number": {
-                        "type": "string", 
-                        "default": None, 
-                        "description": "", 
-                        "choices": None, 
-                        "required": True
+                        "data_type": "string",
+                        "input_type": "text",
+                        "default": "",
+                        "description": "",
+                        "choices": None,
+                        "required": False,
                     }
-                }
+                },
             }
-        ], 
-        "total": 1, 
-        "page": 1, 
-        "size": 50
+        ],
+        "total": 1,
+        "page": 1,
+        "size": 50,
     }
 
 
 def test_entity_type_create(client, test_data, test_user):
-    response = client.post("/entity-type/", json={
+    response = client.post(
+        "/entity-type/",
+        json={
             "name": "supplier",
             "owner": test_user.user_id,
             "organisation": test_user.organisation_id,
             "fields": {
-                "supplier_number": {
-                    "type": "string" 
-                }
-            }
-        }
+                "supplier_number": {"input_type": "text", "data_type": "string"}
+            },
+        },
     )
     assert response.status_code == 200
     assert "supplier" == response.json()["name"]
@@ -48,18 +49,17 @@ def test_entity_type_create(client, test_data, test_user):
 
 def test_entity_type_update(client, test_data, test_user):
     entity_uuid = test_data["entityType"]["uuid"]
-    response = client.patch(f"/entity-type/{entity_uuid}/", json={
+    response = client.patch(
+        f"/entity-type/{entity_uuid}/",
+        json={
             "name": "product_2",
             "uuid": entity_uuid,
             "owner": test_user.user_id,
             "organisation": test_user.organisation_id,
             "fields": {
-                "product_number_2": {
-                    "input_type": "text",
-                    "data_type": "string"
-                }
-            }
-        }
+                "product_number_2": {"input_type": "text", "data_type": "string"}
+            },
+        },
     )
     assert response.status_code == 200, response.json()
     assert "product_2" == response.json()["name"]
