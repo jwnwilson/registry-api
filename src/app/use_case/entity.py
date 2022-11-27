@@ -16,13 +16,13 @@ def list(
 
 def read(
     uuid:str, entity_type: str, db_adapter: DbAdapter, user: UserData
-) -> List[EntityDTO]:
+) -> EntityDTO:
     return entity.read(uuid, entity_type, user=user, db_adapter=db_adapter)
 
 
 def update(
     uuid:str, entity_type: str, entity_data: UpdateEntityDTO, db_adapter: DbAdapter, user: UserData
-) -> List[EntityDTO]:
+) -> EntityDTO:
     return entity.update(uuid, entity_type, entity_data=entity_data, user=user, db_adapter=db_adapter)
 
 
@@ -34,7 +34,7 @@ def delete(
 
 def create(
     entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter
-) -> List[EntityDTO]:
+) -> EntityDTO:
     return entity.create(entity_data, user=user, db_adapter=db_adapter)
 
 

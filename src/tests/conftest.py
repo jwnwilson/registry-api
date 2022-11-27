@@ -12,7 +12,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def override_db() -> DbAdapter:
+def override_db():
     from app.adapter.into.fastapi.main import app
     from app.adapter.into.fastapi.dependencies import get_db_adapater
     from .overrides import override_get_db_adapater

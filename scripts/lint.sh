@@ -12,7 +12,7 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-APP_FOLDER=app
+APP_FOLDER=src
 
 if [[ -z "${check}" ]]; then
     black ${APP_FOLDER} 

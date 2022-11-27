@@ -1,4 +1,3 @@
-from sqlite3 import dbapi2
 import logging
 from typing import List
 from pydantic import ValidationError
@@ -36,7 +35,7 @@ def list(
 
 def read(
     uuid:str, user: UserData, db_adapter: DbAdapter
-) -> List[EntityTypeDTO]:
+) -> EntityTypeDTO:
     data = db_adapter.read(TABLE, uuid)
     return EntityTypeDTO(**data)
 

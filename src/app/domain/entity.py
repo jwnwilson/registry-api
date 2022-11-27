@@ -2,8 +2,8 @@ import json
 from typing import List, Union
 import logging
 from pydantic import ValidationError
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
+from jsonschema import validate # type: ignore
+from jsonschema.exceptions import ValidationError as JsonValidationError # type: ignore
 import uuid
 
 from hex_lib.ports.db import DbAdapter, ListParams
@@ -21,19 +21,19 @@ logger = logging.getLogger(__name__)
 
 
 def _validate_fields(
-        entity_data: List[Union[CreateEntityDTO, UpdateEntityDTO]],
+        entity_data: Union[List[CreateEntityDTO], List[UpdateEntityDTO], List[EntityDTO]],
         user: UserData,
         db_adapter: DbAdapter):
     # Get entity type for entity
-    entity_type = entity_data[0].entity_type
+    entity_type_name = entity_data[0].entity_type
     param = ListParams(
-        filters={"name": entity_type}
+        filters={"name": entity_type_name}
     )
     entity_types = list_entity_types(param, user, db_adapter)
     entity_types_len = len(entity_types)
 
     try:
-        assertion_error_msg = f"Unknown Entity Type: {entity_type}"
+        assertion_error_msg = f"Unknown Entity Type: {entity_type_name}"
         assert entity_types_len == 1, assertion_error_msg
     except AssertionError as err:
         raise EntityValidationError(str(err))
@@ -57,7 +57,7 @@ def _validate_fields(
     try:
         for entity in entity_data:
             validate(instance=entity.fields, schema=schema)
-    except ValidationError as err:
+    except JsonValidationError as err:
         raise EntityValidationError(str(err))
         
 
@@ -86,7 +86,7 @@ def list(
     return entity_types
 
 
-def _create_entity(entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter) -> EntityDTO:
+def _create_entity(entity_data: Union[CreateEntityDTO, EntityDTO], user: UserData, db_adapter: DbAdapter) -> EntityDTO:
     create_data = entity_data.dict()
     entity_uuid = str(uuid.uuid4())
     create_data["uuid"] = entity_uuid
@@ -95,13 +95,13 @@ def _create_entity(entity_data: CreateEntityDTO, user: UserData, db_adapter: DbA
 
     entity_data = db_adapter.create(TABLE, record_data=create_data)
     return EntityDTO(
-        **entity_data
+        **create_data
     )
 
 
 def create(
     entity_data: CreateEntityDTO, user: UserData, db_adapter: DbAdapter
-) -> List[EntityDTO]:
+) -> EntityDTO:
     _validate_fields([entity_data], user, db_adapter)
 
     entity_dto = _create_entity(entity_data, user, db_adapter)
@@ -109,7 +109,7 @@ def create(
 
 def read(
     uuid:str, entity_type:str, user: UserData, db_adapter: DbAdapter
-) -> List[EntityDTO]:
+) -> EntityDTO:
     data = db_adapter.read(TABLE, uuid)
     return EntityDTO(**data)
 
@@ -145,7 +145,7 @@ def parse_json(entity_type:str, parse_json: FileDTO, user:UserData, db_adapter: 
     return entities
 
 
-def create_entities(entity_data: List[CreateEntityDTO], user:UserData, db_adapter: DbAdapter) -> List[EntityDTO]:
+def create_entities(entity_data: Union[List[CreateEntityDTO], List[EntityDTO]], user:UserData, db_adapter: DbAdapter) -> List[EntityDTO]:
     entity_dtos = []
 
     for entity in entity_data:

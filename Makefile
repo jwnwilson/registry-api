@@ -10,10 +10,6 @@ build:
 push:
 	bash ./scripts/push.sh
 
-# Run API and install local hex-lib library for development
-run_hex:
-	${DOCKER_HEX_COMMAND}  run --service-ports ${DOCKER_NAME}
-
 run:
 	${DOCKER_COMMAND} up
 
@@ -22,6 +18,13 @@ debug:
 
 shell:
 	${DOCKER_COMMAND} run --service-ports ${DOCKER_NAME} bash
+
+# Run API and install local hex-lib library for development
+run_hex:
+	${DOCKER_HEX_COMMAND}  run --service-ports ${DOCKER_NAME}
+
+run_hex_shell:
+	${DOCKER_HEX_COMMAND}  run --service-ports ${DOCKER_NAME} bash
 
 reset_db: stop
 	${DOCKER_COMMAND} run db bash -c "rm -rf /data/db/*"

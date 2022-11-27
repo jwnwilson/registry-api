@@ -4,6 +4,7 @@ from json import JSONDecodeError
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi_pagination import Page, paginate
+from fastapi_pagination.bases import AbstractPage
 
 from hex_lib.adapter.out.db.exceptions import DuplicateRecord
 from hex_lib.ports.db import ListParams
@@ -26,7 +27,7 @@ router = APIRouter(
 @router.get("/{entity_type}/", tags=["Entity"], response_model=Page[EntityDTO])
 def list_entity(
     entity_type:str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
-) -> EntityDTO:
+) -> AbstractPage[EntityDTO]:
     query_param: QueryParam = QueryParam(
         entity_type=entity_type
     )
