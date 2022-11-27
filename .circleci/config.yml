@@ -73,11 +73,15 @@ workflows:
           filters:
             branches:
               ignore: main
+          context:
+            - AWS
       - build-and-test-push:
           name: build-and-test-push
           filters:
             branches:
               only: main
+          context:
+            - AWS
       - deploy-staging:
           name: deploy-staging
           requires:
@@ -85,10 +89,14 @@ workflows:
           filters:
             branches:
               only: main
+          context:
+            - AWS
       - deploy-prod:
           type: approval
           requires:
             - deploy-staging
+          context:
+            - AWS
       - deploy-prod-plan:
           name: deploy-prod-plan
           requires:
@@ -96,6 +104,8 @@ workflows:
           filters:
             branches:
               only: main
+          context:
+            - AWS
       - deploy-prod-approve:
           type: approval
           requires:
@@ -103,3 +113,5 @@ workflows:
       - deploy-prod-apply:
           requires:
             - deploy-prod-approve
+          context:
+              - AWS
