@@ -49,3 +49,6 @@ deploy:
 clean:
 	rm **/**/*.pyc
 	rm **/**/__pycache__
+
+update_project:
+	bash ./scripts/update_project.sh
