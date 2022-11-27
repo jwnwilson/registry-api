@@ -2,8 +2,6 @@
 
 A project to act as a generic persistence layer with the following abilities.
 
-This is a test edit to see how cruft works
-
 - Can define entity types with fields
 - CRUD entities
 - Link entities to one anther

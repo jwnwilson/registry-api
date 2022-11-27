@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/jwnwilson/fastapi-template",
-  "commit": "cfbe3bd169f12cd87df4b4e4de824a65ae98ce81",
+  "commit": "ef12cd2381ac71e40600cecd855af2f23ed44df3",
   "context": {
     "cookiecutter": {
       "project_name": "Registry-API",
