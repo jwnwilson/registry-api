@@ -89,7 +89,7 @@ def delete_entity(
     return
 
 
-@router.post("/{entity_type}/import/", tags=["Entity"])
+@router.post("/{entity_type}/import/", tags=["Import / Export"])
 def import_entities(
     entity_type:str, file: UploadFile, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> List[EntityDTO]:

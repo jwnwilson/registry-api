@@ -20,7 +20,6 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Add tests
 - Add infra pipeline (kubernetes?)
 - Setup back linking uuid in linked entity (update both entities)
 - Filter by organisation (add default org for anonymous users)
