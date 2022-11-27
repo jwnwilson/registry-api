@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
-from hex_lib.ports.user import UserData
 from hex_lib.ports.db import DbAdapter
+from hex_lib.ports.user import UserData
 
 
 @pytest.fixture
@@ -13,8 +13,9 @@ def client():
 
 @pytest.fixture(autouse=True)
 def override_db():
-    from app.adapter.into.fastapi.main import app
     from app.adapter.into.fastapi.dependencies import get_db_adapater
+    from app.adapter.into.fastapi.main import app
+
     from .overrides import override_get_db_adapater
 
     app.dependency_overrides[get_db_adapater] = override_get_db_adapater
@@ -24,8 +25,9 @@ def override_db():
 
 @pytest.fixture(autouse=True)
 def override_user_data():
-    from app.adapter.into.fastapi.main import app
     from app.adapter.into.fastapi.dependencies import get_current_user
+    from app.adapter.into.fastapi.main import app
+
     from .overrides import override_get_current_user
 
     app.dependency_overrides[get_current_user] = override_get_current_user
@@ -36,12 +38,14 @@ def override_user_data():
 @pytest.fixture()
 def test_user():
     from .overrides import get_test_user
+
     return get_test_user()
 
 
 @pytest.fixture()
 def db(test_user):
     from .overrides import get_test_db_adapater
+
     return get_test_db_adapater(test_user)
 
 
@@ -61,9 +65,9 @@ def test_data(db, test_user):
                     "input_type": "text",
                     "data_type": "string",
                     "description": "",
-                    "default": ""
+                    "default": "",
                 }
-            }
+            },
         },
         "entity": {
             "name": "knife",
@@ -71,11 +75,9 @@ def test_data(db, test_user):
             "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
             "owner": test_user.user_id,
             "organisation": test_user.organisation_id,
-            "fields": {
-                "product_number": "12345"
-            },
-            "links": []
-        }
+            "fields": {"product_number": "12345"},
+            "links": [],
+        },
     }
 
     db.create("entityType", data["entityType"])

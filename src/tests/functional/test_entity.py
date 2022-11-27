@@ -9,9 +9,7 @@ def test_entity_list(client, test_data):
                 "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
                 "owner": "01f2612b-e277-4ed5-91a3-254fc8c09325",
                 "organisation": None,
-                "fields": {
-                    "product_number": "12345"
-                },
+                "fields": {"product_number": "12345"},
                 "links": [],
             }
         ],
@@ -22,14 +20,17 @@ def test_entity_list(client, test_data):
 
 
 def test_entity_create(client, test_user, test_data):
-    response = client.post("/entity/product/", json={
-        "name": "spoon",
-        "entity_type": "product",
-        "owner": test_user.user_id,
-        "organisation": test_user.organisation_id,
-        "fields": {"product_number": "54321"},
-        "links": [],
-    })
+    response = client.post(
+        "/entity/product/",
+        json={
+            "name": "spoon",
+            "entity_type": "product",
+            "owner": test_user.user_id,
+            "organisation": test_user.organisation_id,
+            "fields": {"product_number": "54321"},
+            "links": [],
+        },
+    )
     assert response.status_code == 200
     assert "spoon" == response.json()["name"]
     assert "product" == response.json()["entity_type"]
@@ -38,14 +39,17 @@ def test_entity_create(client, test_user, test_data):
 
 def test_entity_update(client, test_data, test_user):
     entity_uuid = test_data["entity"]["uuid"]
-    response = client.patch(f"/entity/product/{entity_uuid}/", json={
-        "name": "spoon2",
-        "entity_type": "product",
-        "owner": test_user.user_id,
-        "organisation": test_user.organisation_id,
-        "fields": {"product_number": "12345"},
-        "links": [],
-    })
+    response = client.patch(
+        f"/entity/product/{entity_uuid}/",
+        json={
+            "name": "spoon2",
+            "entity_type": "product",
+            "owner": test_user.user_id,
+            "organisation": test_user.organisation_id,
+            "fields": {"product_number": "12345"},
+            "links": [],
+        },
+    )
     assert response.status_code == 200, response.json()
 
     assert "spoon2" == response.json()["name"]

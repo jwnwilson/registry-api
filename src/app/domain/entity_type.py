@@ -1,12 +1,16 @@
 import logging
-from typing import List
-from pydantic import ValidationError
 import uuid
+from typing import List
 
 from hex_lib.ports.db import DbAdapter, ListParams
 from hex_lib.ports.user import UserData
+from pydantic import ValidationError
 
-from app.ports.entity_type import EntityTypeDTO, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from app.ports.entity_type import (
+    CreateEntityTypeDTO,
+    EntityTypeDTO,
+    UpdateEntityTypeDTO,
+)
 
 TABLE = "entityType"
 
@@ -19,7 +23,7 @@ def list(
     params = ListParams(
         limit=query_param.limit,
         filters=query_param.filters,
-        organisation=user.organisation_id
+        organisation=user.organisation_id,
     )
     data = db_adapter.list(TABLE, params)
     entity_types = []
@@ -33,15 +37,13 @@ def list(
     return entity_types
 
 
-def read(
-    uuid:str, user: UserData, db_adapter: DbAdapter
-) -> EntityTypeDTO:
+def read(uuid: str, user: UserData, db_adapter: DbAdapter) -> EntityTypeDTO:
     data = db_adapter.read(TABLE, uuid)
     return EntityTypeDTO(**data)
 
 
 def update(
-    uuid:str, entity_data: UpdateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
+    uuid: str, entity_data: UpdateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
 ) -> EntityTypeDTO:
     update_data = entity_data.dict()
     _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
@@ -49,9 +51,7 @@ def update(
     return EntityTypeDTO(**data)
 
 
-def delete(
-    uuid: str, user: UserData, db_adapter: DbAdapter
-) -> None:
+def delete(uuid: str, user: UserData, db_adapter: DbAdapter) -> None:
     db_adapter.delete(table=TABLE, record_id=uuid)
     return
 

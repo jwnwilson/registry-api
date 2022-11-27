@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from tempfile import SpooledTemporaryFile
+
+from pydantic import BaseModel
 
 
 class FileDTO(BaseModel):
@@ -8,4 +9,4 @@ class FileDTO(BaseModel):
     content_type: str
 
     class Config:
-        arbitrary_types_allowed  = True
+        arbitrary_types_allowed = True

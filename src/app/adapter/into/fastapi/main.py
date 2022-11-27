@@ -1,8 +1,8 @@
 import os
 
 from fastapi import Depends, FastAPI
-from fastapi_pagination import add_pagination
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 
 from .dependencies import get_current_user
 from .routes import entity, entity_type

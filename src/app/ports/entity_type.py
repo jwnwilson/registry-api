@@ -1,22 +1,22 @@
 from enum import Enum
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 class DataEnum(Enum):
-    string = 'string'
-    number = 'number'
-    url = 'url'
-    enum = 'enum'
+    string = "string"
+    number = "number"
+    url = "url"
+    enum = "enum"
 
 
 class InputEnum(Enum):
-    text = 'text'
-    text_area = 'textArea'
-    select = 'select'
-    checkbox = 'checkbox'
-    radio = 'radio'
+    text = "text"
+    text_area = "textArea"
+    select = "select"
+    checkbox = "checkbox"
+    radio = "radio"
 
 
 class FieldAttr(BaseModel):
@@ -27,7 +27,7 @@ class FieldAttr(BaseModel):
     choices: Optional[List[str]]
     required: bool = False
 
-    class Config:  
+    class Config:
         use_enum_values = True
 
 
@@ -41,7 +41,7 @@ class EntityTypeDTO(BaseModel):
     organisation: Optional[str]
     fields: FieldType
 
-    class Config:  
+    class Config:
         use_enum_values = True
 
 
@@ -49,7 +49,7 @@ class CreateEntityTypeDTO(BaseModel):
     name: str
     fields: FieldType
 
-    class Config:  
+    class Config:
         use_enum_values = True
 
 
@@ -59,6 +59,5 @@ class UpdateEntityTypeDTO(BaseModel):
     owner: Optional[str]
     organisation: Optional[str]
 
-    class Config:  
+    class Config:
         use_enum_values = True
-

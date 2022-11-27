@@ -4,11 +4,15 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.bases import AbstractPage
-from hex_lib.ports.db import ListParams
 from hex_lib.adapter.out.db.exceptions import DuplicateRecord
+from hex_lib.ports.db import ListParams
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
-from app.ports.entity_type import EntityTypeDTO, CreateEntityTypeDTO, UpdateEntityTypeDTO
+from app.ports.entity_type import (
+    CreateEntityTypeDTO,
+    EntityTypeDTO,
+    UpdateEntityTypeDTO,
+)
 from app.use_case import entity_type as entity_type_uc
 
 logger = logging.getLogger(__name__)
@@ -53,7 +57,9 @@ def create_entity_type(
 ) -> EntityTypeDTO:
     # call create use case
     try:
-        data: EntityTypeDTO = entity_type_uc.create(entity_type_data, db_adapter=db_adapter, user=user)
+        data: EntityTypeDTO = entity_type_uc.create(
+            entity_type_data, db_adapter=db_adapter, user=user
+        )
     except DuplicateRecord as err:
         raise HTTPException(400, str(err))
     return data
@@ -67,7 +73,9 @@ def update_entity_type(
     user=Depends(get_current_user),
 ) -> EntityTypeDTO:
     # call create use case
-    data: EntityTypeDTO = entity_type_uc.update(uuid=uuid, entity_data=entity_type_data, db_adapter=db_adapter, user=user)
+    data: EntityTypeDTO = entity_type_uc.update(
+        uuid=uuid, entity_data=entity_type_data, db_adapter=db_adapter, user=user
+    )
     return data
 
 

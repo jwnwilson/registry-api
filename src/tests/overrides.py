@@ -1,10 +1,9 @@
 from fastapi import Depends
+from hex_lib.adapter.out.db import MongoDbAdapter
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
 from starlette.requests import Request
 
-
-from hex_lib.adapter.out.db import MongoDbAdapter
 from app.adapter.into.fastapi.dependencies import get_current_user
 
 
@@ -15,12 +14,12 @@ def get_test_user():
 
 def get_test_db_adapater(user_data: UserData):
     # connect to test db
-    return MongoDbAdapter(config={
-        "db_name": "test_db"
-    }, user=user_data)
+    return MongoDbAdapter(config={"db_name": "test_db"}, user=user_data)
 
 
-def override_get_db_adapater(user_data: UserData = Depends(get_current_user)) -> DbAdapter:
+def override_get_db_adapater(
+    user_data: UserData = Depends(get_current_user),
+) -> DbAdapter:
     return get_test_db_adapater(user_data)
 
 

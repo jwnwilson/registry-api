@@ -2,12 +2,10 @@ import os
 
 from fastapi import Depends
 from fastapi.security import HTTPBearer
-from starlette.requests import Request
-
+from hex_lib.adapter.out.db import MongoDbAdapter
 from hex_lib.ports.db import DbAdapter
 from hex_lib.ports.user import UserData
-from hex_lib.adapter.out.db import MongoDbAdapter
-
+from starlette.requests import Request
 
 ENVIRONMENT = os.environ["ENVIRONMENT"]
 
