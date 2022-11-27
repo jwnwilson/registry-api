@@ -4,7 +4,7 @@ from hex_lib.ports.user import UserData
 from starlette.requests import Request
 
 
-from app.adapter.out.db import MongoDbAdapter
+from hex_lib.adapter.out.db import MongoDbAdapter
 from app.adapter.into.fastapi.dependencies import get_current_user
 
 

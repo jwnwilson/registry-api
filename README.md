@@ -21,6 +21,7 @@ POST /entity/<type>/upload
 ## TODO
 
 - Add tests
+- Add infra pipeline (kubernetes?)
 - Setup back linking uuid in linked entity (update both entities)
 - Filter by organisation (add default org for anonymous users)
 - Add search endpoint using nosql
@@ -32,9 +33,9 @@ POST /entity/<type>/upload
     - fastapi background task
 - Design search indexing / better data migration logic (event bus? celery?)
 - Add elasticsearch to dockercompose
-- Upgerade search endpoint with elasticsearch
+- Upgrade search endpoint with elasticsearch
 - Add Auth (decode /jwt token)
-- Add infra pipeline (kubernetes?)
+
 
 # Requirements
 
