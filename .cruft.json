@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/jwnwilson/fastapi-template",
-  "commit": "e829b0e57879ff56feb14fc0ba8cd92b31ef26be",
+  "commit": "cfbe3bd169f12cd87df4b4e4de824a65ae98ce81",
   "context": {
     "cookiecutter": {
       "project_name": "Registry-API",
@@ -10,9 +10,9 @@
       "email": "jwnwilson@hotmail.co.uk",
       "release_date": "2022-11-27",
       "version": "0.0.0",
-      "_extensions": [],
       "_template": "https://github.com/jwnwilson/fastapi-template"
     }
   },
-  "directory": null
+  "directory": null,
+  "checkout": null
 }
