@@ -22,6 +22,7 @@ POST /entity/<type>/upload
 
 - Deploy project (lambda + dynamodb)
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
+- Add multiple owners for entities (users, groups and organisations)
 - Filter by organisation (add default org for anonymous users)
 - Add search endpoint using nosql
     - Search by field / links
