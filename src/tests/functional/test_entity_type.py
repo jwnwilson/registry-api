@@ -6,8 +6,6 @@ def test_entity_type_list(client, test_data):
             {
                 "name": "product",
                 "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
-                "owner": "01f2612b-e277-4ed5-91a3-254fc8c09325",
-                "organisation": None,
                 "fields": {
                     "product_number": {
                         "data_type": "string",
@@ -18,9 +16,50 @@ def test_entity_type_list(client, test_data):
                         "required": False,
                     }
                 },
-            }
+                "links": {
+                    "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                        "direction": "bi_directional",
+                        "entity_type": "organisation",
+                    }
+                },
+            },
+            {
+                "name": "user",
+                "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
+                "fields": {
+                    "name": {
+                        "data_type": "string",
+                        "input_type": "text",
+                        "default": "",
+                        "description": "",
+                        "choices": None,
+                        "required": False,
+                    }
+                },
+                "links": {
+                    "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                        "direction": "bi_directional",
+                        "entity_type": "organisation",
+                    }
+                },
+            },
+            {
+                "name": "organisation",
+                "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
+                "fields": {
+                    "name": {
+                        "data_type": "string",
+                        "input_type": "text",
+                        "default": "",
+                        "description": "",
+                        "choices": None,
+                        "required": False,
+                    }
+                },
+                "links": None,
+            },
         ],
-        "total": 1,
+        "total": 3,
         "page": 1,
         "size": 50,
     }
@@ -31,8 +70,6 @@ def test_entity_type_create(client, test_data, test_user):
         "/entity-type/",
         json={
             "name": "supplier",
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {
                 "supplier_number": {"input_type": "text", "data_type": "string"}
             },
@@ -44,18 +81,16 @@ def test_entity_type_create(client, test_data, test_user):
 
     response = client.get("/entity-type/")
     assert response.status_code == 200
-    assert len(response.json()["items"]) == 2
+    assert len(response.json()["items"]) == 4
 
 
 def test_entity_type_update(client, test_data, test_user):
-    entity_uuid = test_data["entityType"]["uuid"]
+    entity_uuid = test_data["productEntityType"]["uuid"]
     response = client.patch(
         f"/entity-type/{entity_uuid}/",
         json={
             "name": "product_2",
             "uuid": entity_uuid,
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {
                 "product_number_2": {"input_type": "text", "data_type": "string"}
             },
@@ -67,10 +102,10 @@ def test_entity_type_update(client, test_data, test_user):
 
 
 def test_entity_delete(client, test_data, test_user):
-    entity_uuid = test_data["entityType"]["uuid"]
+    entity_uuid = test_data["productEntityType"]["uuid"]
     response = client.delete(f"/entity-type/{entity_uuid}/")
     assert response.status_code == 201, response.json()
 
     response = client.get("/entity-type/")
     assert response.status_code == 200, response.json()
-    assert len(response.json()["items"]) == 0
+    assert len(response.json()["items"]) == 2

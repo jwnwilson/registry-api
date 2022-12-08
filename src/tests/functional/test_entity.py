@@ -7,10 +7,13 @@ def test_entity_list(client, test_data):
                 "name": "knife",
                 "entity_type": "product",
                 "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
-                "owner": "01f2612b-e277-4ed5-91a3-254fc8c09325",
-                "organisation": None,
                 "fields": {"product_number": "12345"},
-                "links": [],
+                "links": {
+                    "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                        "direction": "bi_directional",
+                        "entity_type": "organisation",
+                    }
+                },
             }
         ],
         "total": 1,
@@ -25,8 +28,6 @@ def test_entity_create(client, test_user, test_data):
         json={
             "name": "spoon",
             "entity_type": "product",
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {"product_number": "54321"},
             "links": [],
         },
@@ -44,8 +45,6 @@ def test_entity_update(client, test_data, test_user):
         json={
             "name": "spoon2",
             "entity_type": "product",
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {"product_number": "12345"},
             "links": [],
         },

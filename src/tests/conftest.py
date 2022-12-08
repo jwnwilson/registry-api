@@ -55,11 +55,9 @@ def test_data(db, test_user):
     db.client[db.db]["entity"].delete_many({})
 
     data = {
-        "entityType": {
+        "productEntityType": {
             "name": "product",
             "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {
                 "product_number": {
                     "input_type": "text",
@@ -68,19 +66,61 @@ def test_data(db, test_user):
                     "default": "",
                 }
             },
+            "links": {
+                "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                    "direction": "bi_directional",
+                    "entity_type": "organisation",
+                }
+            },
+        },
+        "userEntityType": {
+            "name": "user",
+            "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
+            "fields": {
+                "name": {
+                    "input_type": "text",
+                    "data_type": "string",
+                    "description": "",
+                    "default": "",
+                }
+            },
+            "links": {
+                "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                    "direction": "bi_directional",
+                    "entity_type": "organisation",
+                }
+            },
+        },
+        "orgEntityType": {
+            "name": "organisation",
+            "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
+            "fields": {
+                "name": {
+                    "input_type": "text",
+                    "data_type": "string",
+                    "description": "",
+                    "default": "",
+                }
+            },
+            "links": None,
         },
         "entity": {
             "name": "knife",
             "entity_type": "product",
             "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
-            "owner": test_user.user_id,
-            "organisation": test_user.organisation_id,
             "fields": {"product_number": "12345"},
-            "links": [],
+            "links": {
+                "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                    "direction": "bi_directional",
+                    "entity_type": "organisation",
+                }
+            },
         },
     }
 
-    db.create("entityType", data["entityType"])
+    db.create("entityType", data["productEntityType"])
+    db.create("entityType", data["userEntityType"])
+    db.create("entityType", data["orgEntityType"])
     db.create("entity", data["entity"])
 
     return data

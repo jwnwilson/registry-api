@@ -1,7 +1,9 @@
 from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
+
+from .link import Link
 
 
 class DataEnum(Enum):
@@ -37,9 +39,8 @@ FieldType = dict[str, FieldAttr]
 class EntityTypeDTO(BaseModel):
     name: str
     uuid: str
-    owner: str
-    organisation: Optional[str]
     fields: FieldType
+    links: Optional[Dict[str, Link]]
 
     class Config:
         use_enum_values = True
@@ -48,6 +49,7 @@ class EntityTypeDTO(BaseModel):
 class CreateEntityTypeDTO(BaseModel):
     name: str
     fields: FieldType
+    links: Optional[Dict[str, Link]]
 
     class Config:
         use_enum_values = True
@@ -56,8 +58,7 @@ class CreateEntityTypeDTO(BaseModel):
 class UpdateEntityTypeDTO(BaseModel):
     name: Optional[str]
     fields: Optional[FieldType]
-    owner: Optional[str]
-    organisation: Optional[str]
+    links: Optional[Dict[str, Link]]
 
     class Config:
         use_enum_values = True

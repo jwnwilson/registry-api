@@ -11,29 +11,23 @@ from app.ports.entity_type import (
 )
 
 
-def list(
-    query_param: ListParams, db_adapter: DbAdapter, user: UserData
-) -> List[EntityTypeDTO]:
-    return entity_type.list(query_param, user=user, db_adapter=db_adapter)
+def list(query_param: ListParams, db_adapter: DbAdapter) -> List[EntityTypeDTO]:
+    return entity_type.list(query_param, db_adapter=db_adapter)
 
 
-def read(uuid: str, db_adapter: DbAdapter, user: UserData) -> EntityTypeDTO:
-    return entity_type.read(uuid, user=user, db_adapter=db_adapter)
+def read(uuid: str, db_adapter: DbAdapter) -> EntityTypeDTO:
+    return entity_type.read(uuid, db_adapter=db_adapter)
 
 
 def update(
-    uuid: str, entity_data: UpdateEntityTypeDTO, db_adapter: DbAdapter, user: UserData
+    uuid: str, entity_data: UpdateEntityTypeDTO, db_adapter: DbAdapter
 ) -> EntityTypeDTO:
-    return entity_type.update(
-        uuid, entity_data=entity_data, user=user, db_adapter=db_adapter
-    )
+    return entity_type.update(uuid, entity_data=entity_data, db_adapter=db_adapter)
 
 
-def delete(uuid: str, db_adapter: DbAdapter, user: UserData) -> None:
-    return entity_type.delete(uuid, user=user, db_adapter=db_adapter)
+def delete(uuid: str, db_adapter: DbAdapter) -> None:
+    return entity_type.delete(uuid, db_adapter=db_adapter)
 
 
-def create(
-    entity_data: CreateEntityTypeDTO, user: UserData, db_adapter: DbAdapter
-) -> EntityTypeDTO:
-    return entity_type.create(entity_data, user=user, db_adapter=db_adapter)
+def create(entity_data: CreateEntityTypeDTO, db_adapter: DbAdapter) -> EntityTypeDTO:
+    return entity_type.create(entity_data, db_adapter=db_adapter)

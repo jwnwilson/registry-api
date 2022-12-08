@@ -35,7 +35,7 @@ def list_entity_type(
     # call create use case
     query_param = ListParams(filters=filters, limit=limit)
     data: List[EntityTypeDTO] = entity_type_uc.list(
-        query_param=query_param, db_adapter=db_adapter, user=user
+        query_param=query_param, db_adapter=db_adapter
     )
     return paginate(data)
 
@@ -45,7 +45,7 @@ def get_entity_type(
     uuid, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> EntityTypeDTO:
     # call create use case
-    data: EntityTypeDTO = entity_type_uc.read(uuid, db_adapter=db_adapter, user=user)
+    data: EntityTypeDTO = entity_type_uc.read(uuid, db_adapter=db_adapter)
     return data
 
 
@@ -58,7 +58,7 @@ def create_entity_type(
     # call create use case
     try:
         data: EntityTypeDTO = entity_type_uc.create(
-            entity_type_data, db_adapter=db_adapter, user=user
+            entity_type_data, db_adapter=db_adapter
         )
     except DuplicateRecord as err:
         raise HTTPException(400, str(err))
@@ -74,7 +74,7 @@ def update_entity_type(
 ) -> EntityTypeDTO:
     # call create use case
     data: EntityTypeDTO = entity_type_uc.update(
-        uuid=uuid, entity_data=entity_type_data, db_adapter=db_adapter, user=user
+        uuid=uuid, entity_data=entity_type_data, db_adapter=db_adapter
     )
     return data
 
@@ -84,5 +84,5 @@ def delete_entity(
     uuid: str, db_adapter=Depends(get_db_adapater), user=Depends(get_current_user)
 ) -> None:
     # call create use case
-    entity_type_uc.delete(uuid, db_adapter, user)
+    entity_type_uc.delete(uuid, db_adapter)
     return

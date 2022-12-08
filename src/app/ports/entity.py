@@ -1,48 +1,34 @@
-from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-
-class LinkType(Enum):
-    bi_directional = "bi_directional"
-    related_to = "related_to"
-    related_fom = "related_fom"
-
-
-class Link(BaseModel):
-    uuid: str
-    direction: LinkType = LinkType.bi_directional
-    entity_type: str
-
-    class Config:
-        use_enum_values = True
+from .link import Link
 
 
 class CreateEntityPostDTO(BaseModel):
     name: str
     fields: Optional[dict]
-    links: Optional[List[Link]]
+    links: Optional[Dict[str, Link]]
 
 
 class UpdateEntityPatchDTO(BaseModel):
     name: Optional[str]
     fields: Optional[dict]
-    links: Optional[List[Link]]
+    links: Optional[Dict[str, Link]]
 
 
 class CreateEntityDTO(BaseModel):
     name: str
     entity_type: str
     fields: Optional[dict]
-    links: Optional[List[Link]]
+    links: Optional[Dict[str, Link]]
 
 
 class UpdateEntityDTO(BaseModel):
     name: Optional[str]
     entity_type: str
     fields: Optional[dict]
-    links: Optional[List[Link]]
+    links: Optional[Dict[str, Link]]
 
 
 class QueryParam(BaseModel):
@@ -57,7 +43,5 @@ class EntityDTO(BaseModel):
     name: str
     entity_type: str
     uuid: str
-    owner: str
-    organisation: Optional[str]
     fields: dict
-    links: List[Link]
+    links: Dict[str, Link]
