@@ -38,6 +38,7 @@ FieldType = dict[str, FieldAttr]
 
 class EntityTypeDTO(BaseModel):
     name: str
+    description: str
     uuid: str
     fields: FieldType
     links: Dict[str, Link] = {}
@@ -48,6 +49,7 @@ class EntityTypeDTO(BaseModel):
 
 class CreateEntityTypeDTO(BaseModel):
     name: str
+    description: Optional[str] = ""
     fields: FieldType
     links: Dict[str, Link] = {}
 
@@ -57,6 +59,7 @@ class CreateEntityTypeDTO(BaseModel):
 
 class UpdateEntityTypeDTO(BaseModel):
     name: Optional[str]
+    description: str
     fields: Optional[FieldType]
     links: Dict[str, Link] = {}
 

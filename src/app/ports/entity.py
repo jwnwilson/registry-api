@@ -7,18 +7,21 @@ from .link import Link
 
 class CreateEntityPostDTO(BaseModel):
     name: str
+    description: Optional[str] = ""
     fields: Optional[dict]
     links: Dict[str, Link] = {}
 
 
 class UpdateEntityPatchDTO(BaseModel):
     name: Optional[str]
+    description: str
     fields: Optional[dict]
     links: Dict[str, Link] = {}
 
 
 class CreateEntityDTO(BaseModel):
     name: str
+    description: Optional[str] = ""
     entity_type: str
     fields: Optional[dict]
     links: Dict[str, Link] = {}
@@ -26,6 +29,7 @@ class CreateEntityDTO(BaseModel):
 
 class UpdateEntityDTO(BaseModel):
     name: Optional[str]
+    description: str
     entity_type: str
     fields: Optional[dict]
     links: Dict[str, Link] = {}
@@ -41,6 +45,7 @@ class QueryParam(BaseModel):
 
 class EntityDTO(BaseModel):
     name: str
+    description: str
     entity_type: str
     uuid: str
     fields: dict

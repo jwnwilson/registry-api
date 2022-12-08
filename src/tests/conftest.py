@@ -57,6 +57,7 @@ def test_data(db, test_user):
     data = {
         "productEntityType": {
             "name": "product",
+            "description": "",
             "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
             "fields": {
                 "product_number": {
@@ -75,6 +76,7 @@ def test_data(db, test_user):
         },
         "userEntityType": {
             "name": "user",
+            "description": "",
             "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
             "fields": {
                 "name": {
@@ -93,6 +95,7 @@ def test_data(db, test_user):
         },
         "orgEntityType": {
             "name": "organisation",
+            "description": "",
             "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
             "fields": {
                 "name": {
@@ -106,6 +109,7 @@ def test_data(db, test_user):
         },
         "entity": {
             "name": "knife",
+            "description": "",
             "entity_type": "product",
             "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
             "fields": {"product_number": "12345"},

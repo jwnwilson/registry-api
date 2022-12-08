@@ -5,6 +5,7 @@ def test_entity_list(client, test_data):
         "items": [
             {
                 "name": "knife",
+                "description": "",
                 "entity_type": "product",
                 "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
                 "fields": {"product_number": "12345"},
@@ -44,6 +45,7 @@ def test_entity_update(client, test_data, test_user):
         f"/entity/product/{entity_uuid}/",
         json={
             "name": "spoon2",
+            "description": "",
             "entity_type": "product",
             "fields": {"product_number": "12345"},
             "links": [],

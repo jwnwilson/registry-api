@@ -5,6 +5,7 @@ def test_entity_type_list(client, test_data):
         "items": [
             {
                 "name": "product",
+                "description": "",
                 "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
                 "fields": {
                     "product_number": {
@@ -25,6 +26,7 @@ def test_entity_type_list(client, test_data):
             },
             {
                 "name": "user",
+                "description": "",
                 "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
                 "fields": {
                     "name": {
@@ -45,6 +47,7 @@ def test_entity_type_list(client, test_data):
             },
             {
                 "name": "organisation",
+                "description": "",
                 "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
                 "fields": {
                     "name": {
@@ -70,6 +73,7 @@ def test_entity_type_create(client, test_data, test_user):
         "/entity-type/",
         json={
             "name": "supplier",
+            "description": "",
             "fields": {
                 "supplier_number": {"input_type": "text", "data_type": "string"}
             },
@@ -90,6 +94,7 @@ def test_entity_type_update(client, test_data, test_user):
         f"/entity-type/{entity_uuid}/",
         json={
             "name": "product_2",
+            "description": "",
             "uuid": entity_uuid,
             "fields": {
                 "product_number_2": {"input_type": "text", "data_type": "string"}
