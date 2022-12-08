@@ -102,7 +102,7 @@ def test_data(db, test_user):
                     "default": "",
                 }
             },
-            "links": None,
+            "links": [],
         },
         "entity": {
             "name": "knife",

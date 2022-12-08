@@ -8,27 +8,27 @@ from .link import Link
 class CreateEntityPostDTO(BaseModel):
     name: str
     fields: Optional[dict]
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
 
 class UpdateEntityPatchDTO(BaseModel):
     name: Optional[str]
     fields: Optional[dict]
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
 
 class CreateEntityDTO(BaseModel):
     name: str
     entity_type: str
     fields: Optional[dict]
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
 
 class UpdateEntityDTO(BaseModel):
     name: Optional[str]
     entity_type: str
     fields: Optional[dict]
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
 
 class QueryParam(BaseModel):
@@ -44,4 +44,4 @@ class EntityDTO(BaseModel):
     entity_type: str
     uuid: str
     fields: dict
-    links: Dict[str, Link]
+    links: Dict[str, Link] = {}

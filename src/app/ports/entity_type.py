@@ -40,7 +40,7 @@ class EntityTypeDTO(BaseModel):
     name: str
     uuid: str
     fields: FieldType
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
     class Config:
         use_enum_values = True
@@ -49,7 +49,7 @@ class EntityTypeDTO(BaseModel):
 class CreateEntityTypeDTO(BaseModel):
     name: str
     fields: FieldType
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
     class Config:
         use_enum_values = True
@@ -58,7 +58,7 @@ class CreateEntityTypeDTO(BaseModel):
 class UpdateEntityTypeDTO(BaseModel):
     name: Optional[str]
     fields: Optional[FieldType]
-    links: Optional[Dict[str, Link]]
+    links: Dict[str, Link] = {}
 
     class Config:
         use_enum_values = True

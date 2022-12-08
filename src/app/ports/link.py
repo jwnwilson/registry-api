@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class LinkType(Enum):
     bi_directional = "bi_directional"
     related_to = "related_to"
-    related_fom = "related_fom"
+    related_fom = "related_from"
 
 
 class Link(BaseModel):

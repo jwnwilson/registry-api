@@ -1,14 +1,14 @@
 function createCollections(db) {
-  var collections = ['users', 'entityType', 'entity'];
+  var collections = ['entityType', 'entity'];
 
   for (var i=0; i< collections.length; i++) {
     var table = collections[i];
     db.createCollection(table, { capped: false });
     db[table].createIndex( { "uuid": 1 }, { unique: true } );
     if (table === 'entity') {
-      db[table].createIndex( { "owner": 1, "name": 1, "entityType": 1 }, { unique: true } );
+      db[table].createIndex( { "name": 1, "entityType": 1 }, { unique: true } );
     } else {
-      db[table].createIndex( { "owner": 1, "name": 1 }, { unique: true } );
+      db[table].createIndex( { "name": 1 }, { unique: true } );
     }
   }
 }

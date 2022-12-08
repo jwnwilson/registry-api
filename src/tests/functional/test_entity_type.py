@@ -56,7 +56,7 @@ def test_entity_type_list(client, test_data):
                         "required": False,
                     }
                 },
-                "links": None,
+                "links": {},
             },
         ],
         "total": 3,
