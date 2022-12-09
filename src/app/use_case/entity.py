@@ -45,7 +45,5 @@ def create(
 def create_entities_from_file(
     entity_type: str, file: FileDTO, user: UserData, db_adapter: DbAdapter
 ) -> List[EntityDTO]:
-    entities_dto: List[EntityDTO] = entity.parse_json(
-        entity_type, file, user, db_adapter
-    )
+    entities_dto: List[EntityDTO] = entity.parse_json(entity_type, file, db_adapter)
     return entity.create_entities(entities_dto, db_adapter=db_adapter)
