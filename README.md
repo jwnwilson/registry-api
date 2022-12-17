@@ -20,14 +20,13 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Deploy project (lambda + dynamodb)
+- Add updating field names logic (might need uuid to identify fields to update)
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
-- Add multiple owners for entities (users, groups and organisations)
-- Filter by organisation (add default org for anonymous users)
+- Deploy project (lambda + dynamodb)
+- Filter by links (test filtering by org)
 - Add search endpoint using nosql
     - Search by field / links
 - Add bulk download endpoint
-- Add updating field names logic (might need uuid to identify fields to update)
 - Add tags / categories for entity types
 - Setup entity data migration logic for update entity type
     - fastapi background task
