@@ -20,7 +20,6 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Add updating field names logic (might need uuid to identify fields to update)
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
 - Deploy project (lambda + dynamodb)
 - Filter by links (test filtering by org)

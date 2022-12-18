@@ -28,6 +28,7 @@ run_hex_shell:
 
 reset_db: stop
 	${DOCKER_COMMAND} run db bash -c "rm -rf /data/db/*"
+	${DOCKER_COMMAND} build db
 	${DOCKER_COMMAND} run --service-ports db
 
 stop:

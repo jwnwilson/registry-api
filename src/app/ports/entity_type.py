@@ -22,6 +22,7 @@ class InputEnum(Enum):
 
 
 class FieldAttr(BaseModel):
+    uuid: str
     data_type: DataEnum
     input_type: InputEnum
     default: Optional[str]
