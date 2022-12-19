@@ -9,6 +9,8 @@ def test_entity_type_list(client, test_data):
                 "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
                 "fields": {
                     "product_number": {
+                        "uuid": "f6d7bdd9-f426-4515-b51a-5daad906e131",
+                        "name": "product_number",
                         "data_type": "string",
                         "input_type": "text",
                         "default": "",
@@ -30,6 +32,8 @@ def test_entity_type_list(client, test_data):
                 "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
                 "fields": {
                     "name": {
+                        "uuid": "8742424e-46de-45e4-8d98-4a4d3ddb66b5",
+                        "name": "name",
                         "data_type": "string",
                         "input_type": "text",
                         "default": "",
@@ -51,6 +55,8 @@ def test_entity_type_list(client, test_data):
                 "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
                 "fields": {
                     "name": {
+                        "uuid": "2bb37c7d-3aa2-4d0d-ad9a-6b15149c1605",
+                        "name": "name",
                         "data_type": "string",
                         "input_type": "text",
                         "default": "",
@@ -75,7 +81,12 @@ def test_entity_type_create(client, test_data, test_user):
             "name": "supplier",
             "description": "",
             "fields": {
-                "supplier_number": {"input_type": "text", "data_type": "string"}
+                "supplier_number": {
+                    "uuid": "be06dc7e-6071-4150-b714-2e4f4bf956e3",
+                    "name": "supplier_number",
+                    "input_type": "text",
+                    "data_type": "string",
+                }
             },
         },
     )
@@ -97,7 +108,12 @@ def test_entity_type_update(client, test_data, test_user):
             "description": "",
             "uuid": entity_uuid,
             "fields": {
-                "product_number_2": {"input_type": "text", "data_type": "string"}
+                "product_number_2": {
+                    "name": "product_number_2",
+                    "uuid": "a66adada-4ec0-4ddd-9d67-769e5b68c6c8",
+                    "input_type": "text",
+                    "data_type": "string",
+                }
             },
         },
     )

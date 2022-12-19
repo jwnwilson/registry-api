@@ -61,6 +61,8 @@ def test_data(db, test_user):
             "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
             "fields": {
                 "product_number": {
+                    "uuid": "f6d7bdd9-f426-4515-b51a-5daad906e131",
+                    "name": "product_number",
                     "input_type": "text",
                     "data_type": "string",
                     "description": "",
@@ -80,6 +82,8 @@ def test_data(db, test_user):
             "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
             "fields": {
                 "name": {
+                    "uuid": "8742424e-46de-45e4-8d98-4a4d3ddb66b5",
+                    "name": "name",
                     "input_type": "text",
                     "data_type": "string",
                     "description": "",
@@ -99,6 +103,8 @@ def test_data(db, test_user):
             "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
             "fields": {
                 "name": {
+                    "name": "name",
+                    "uuid": "2bb37c7d-3aa2-4d0d-ad9a-6b15149c1605",
                     "input_type": "text",
                     "data_type": "string",
                     "description": "",
