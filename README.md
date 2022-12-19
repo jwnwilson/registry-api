@@ -7,6 +7,11 @@ A project to act as a generic persistence layer with the following abilities.
 - Link entities to one anther
 - Search entities by type, fields uuids or links
 
+# Project goals
+
+- A tool that can be used to parse large amounts of company data that is usually held in spreadsheets.
+- Build and manage relationships between entities to identify trends
+
 ## Endpoints
 
 POST/ GET/ PATCH/ DELETE /entityType/
