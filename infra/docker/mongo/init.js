@@ -36,6 +36,7 @@ db.entityType.insert({
   "uuid": "c1607de2-6257-463a-bf69-2709ec7450e4",
   "fields": {
     "product_number": {
+      "name": "product_number",
       "uuid": "18560f88-3e4c-4e7b-a5d0-6360774f3d59",
       "data_type": "string",
       "input_type": "text",
@@ -53,6 +54,7 @@ db.entityType.insert({
   "uuid": "b8f63b68-585d-49e3-82b5-45f2a7e33fba",
   "fields": {
     "supplier_number": {
+      "name": "supplier_number",
       "uuid": "6f19b3d7-4175-44a4-8c22-6a3619daa5b0",
       "data_type": "number",
       "input_type": "text",
@@ -70,6 +72,7 @@ db.entityType.insert({
   "uuid": "f04afe93-759d-4139-bead-3adc7c77ee04",
   "fields": {
     "name": {
+      "name": "name",
       "uuid": "3977bed3-6fc6-4a59-aadd-bc50d5601fdf",
       "data_type": "string",
       "input_type": "text",
@@ -78,6 +81,7 @@ db.entityType.insert({
       "choices": [],
       "required": false
     }, "email": {
+      "name": "email",
       "uuid": "2f030b0e-f7d7-44f0-aeac-13a0817ecf6a",
       "data_type": "string",
       "input_type": "text",
