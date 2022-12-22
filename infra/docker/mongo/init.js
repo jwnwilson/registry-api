@@ -46,7 +46,10 @@ db.entityType.insert({
       "required": false
     }
   },
-  "links": {}
+  "links": {},
+  "metadata": {
+    "icon": "Inventory"
+  }
 });
 db.entityType.insert({
   "name": "Supplier",
@@ -64,7 +67,10 @@ db.entityType.insert({
       "required": false
     }
   },
-  "links": {}
+  "links": {},
+  "metadata": {
+    "icon": "LocalShipping"
+  }
 });
 db.entityType.insert({
   "name": "User",
@@ -91,7 +97,10 @@ db.entityType.insert({
       "required": false
     }
   },
-  "links": {}
+  "links": {},
+  "metadata": {
+    "icon": "Person"
+  }
 });
 
 // Add entities
@@ -103,7 +112,8 @@ db.entity.insert({
   "fields": {
     "product_number": "abc"
   },
-  "links": {}
+  "links": {},
+  "metadata": {}
 });
 db.entity.insert({
   "name": "Supplier 1",
@@ -113,7 +123,8 @@ db.entity.insert({
   "fields": {
     "supplier_number": 1234
   },
-  "links": {}
+  "links": {},
+  "metadata": {}
 });
 db.entity.insert({
   "name": "Text User 1",
@@ -124,7 +135,8 @@ db.entity.insert({
     "name": "testy mcgee",
     "email": "test.com"
   },
-  "links": {}
+  "links": {},
+  "metadata": {}
 });
 
 // Test DB setup
