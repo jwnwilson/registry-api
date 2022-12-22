@@ -75,6 +75,7 @@ def test_data(db, test_user):
                     "entity_type": "organisation",
                 }
             },
+            "metadata": {},
         },
         "userEntityType": {
             "name": "user",
@@ -96,6 +97,7 @@ def test_data(db, test_user):
                     "entity_type": "organisation",
                 }
             },
+            "metadata": {},
         },
         "orgEntityType": {
             "name": "organisation",
@@ -111,7 +113,8 @@ def test_data(db, test_user):
                     "default": "",
                 }
             },
-            "links": [],
+            "links": {},
+            "metadata": {},
         },
         "entity": {
             "name": "knife",
@@ -125,6 +128,7 @@ def test_data(db, test_user):
                     "entity_type": "organisation",
                 }
             },
+            "metadata": {},
         },
     }
 

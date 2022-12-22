@@ -25,6 +25,7 @@ def test_entity_type_list(client, test_data):
                         "entity_type": "organisation",
                     }
                 },
+                "metadata": {},
             },
             {
                 "name": "user",
@@ -48,6 +49,7 @@ def test_entity_type_list(client, test_data):
                         "entity_type": "organisation",
                     }
                 },
+                "metadata": {},
             },
             {
                 "name": "organisation",
@@ -66,6 +68,7 @@ def test_entity_type_list(client, test_data):
                     }
                 },
                 "links": {},
+                "metadata": {},
             },
         ],
         "total": 3,
@@ -115,6 +118,8 @@ def test_entity_type_update(client, test_data, test_user):
                     "data_type": "string",
                 }
             },
+            "links": {},
+            "metadata": {},
         },
     )
     assert response.status_code == 200, response.json()

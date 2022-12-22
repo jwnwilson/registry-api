@@ -15,6 +15,7 @@ def test_entity_list(client, test_data):
                         "entity_type": "organisation",
                     }
                 },
+                "metadata": {},
             }
         ],
         "total": 1,
@@ -48,7 +49,8 @@ def test_entity_update(client, test_data, test_user):
             "description": "",
             "entity_type": "product",
             "fields": {"product_number": "12345"},
-            "links": [],
+            "links": {},
+            "metadata": {},
         },
     )
     assert response.status_code == 200, response.json()

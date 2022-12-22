@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Dict
 
 from pydantic import BaseModel
 
@@ -15,3 +16,6 @@ class Link(BaseModel):
 
     class Config:
         use_enum_values = True
+
+
+LinkFields = Dict[str, Link]
