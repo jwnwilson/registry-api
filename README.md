@@ -28,9 +28,11 @@ POST /entity/<type>/upload
 - Add relationship metadata
     - The TYPE of relationship (myabe this could be configurable)
         - e.g. blocker, caused by, owns
+        - default to "related"
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
 - Deploy project (lambda + dynamodb)
 - Filter by links (test filtering by org)
+- Filter by fields
 - Add search endpoint using nosql
     - Search by field / links
 - Add bulk download endpoint
