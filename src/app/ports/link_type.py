@@ -3,6 +3,7 @@ from typing import Dict
 
 from pydantic import BaseModel
 
+
 # Type of link
 class LinkTypeDTO(BaseModel):
     name: str

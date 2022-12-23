@@ -10,11 +10,7 @@ from hex_lib.ports.db import ListParams
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain import link_type
 from app.domain.exceptions import EntityValidationError
-from app.ports.link_type import (
-    LinkTypeDTO,
-    CreateLinkTypeDTO,
-    UpdateLinkTypeDTO
-)
+from app.ports.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +30,9 @@ def list_links(
     user=Depends(get_current_user),
 ) -> AbstractPage[LinkTypeDTO]:
     query_param = ListParams(filters=filters, limit=limit)
-    data: List[LinkTypeDTO] = link_type.list(query_param=query_param, db_adapter=db_adapter)
+    data: List[LinkTypeDTO] = link_type.list(
+        query_param=query_param, db_adapter=db_adapter
+    )
     return paginate(data)
 
 
@@ -44,9 +42,7 @@ def get_link(
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> LinkTypeDTO:
-    data: LinkTypeDTO = link_type.read(
-        uuid=uuid, db_adapter=db_adapter
-    )
+    data: LinkTypeDTO = link_type.read(uuid=uuid, db_adapter=db_adapter)
     return data
 
 
