@@ -53,7 +53,9 @@ def create_entity(
     user=Depends(get_current_user),
 ) -> LinkTypeDTO:
     try:
-        data: LinkTypeDTO = link_type.create(link_data=link_data, db_adapter=db_adapter)
+        data: LinkTypeDTO = link_type.create(
+            entity_data=link_data, db_adapter=db_adapter
+        )
     except (DuplicateRecord, EntityValidationError) as err:
         raise HTTPException(400, str(err))
     return data
@@ -69,7 +71,7 @@ def update_entity(
     try:
         data: LinkTypeDTO = link_type.update(
             uuid=uuid,
-            link_data=entity_data,
+            entity_data=entity_data,
             db_adapter=db_adapter,
         )
     except (DuplicateRecord, EntityValidationError) as err:
