@@ -1,7 +1,6 @@
 import logging
-
-from typing import List
 from json import JSONDecodeError
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi_pagination import Page, paginate
@@ -9,6 +8,7 @@ from fastapi_pagination.bases import AbstractPage
 from hex_lib.adapter.out.db.exceptions import DuplicateRecord
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
+from app.domain import entity
 from app.domain.exceptions import EntityValidationError
 from app.ports.entity import (
     CreateEntityDTO,
@@ -19,7 +19,6 @@ from app.ports.entity import (
     UpdateEntityPatchDTO,
 )
 from app.ports.file import FileDTO
-from app.domain import entity
 
 logger = logging.getLogger(__name__)
 
@@ -38,9 +37,7 @@ def list_entity(
     user=Depends(get_current_user),
 ) -> AbstractPage[EntityDTO]:
     query_param: QueryParam = QueryParam(entity_type=entity_type)
-    data: List[EntityDTO] = entity.list(
-        query_param, db_adapter=db_adapter
-    )
+    data: List[EntityDTO] = entity.list(query_param, db_adapter=db_adapter)
     return paginate(data)
 
 
@@ -71,9 +68,7 @@ def create_entity(
     except EntityValidationError as err:
         raise HTTPException(400, str(err))
     try:
-        data: EntityDTO = entity.create(
-            entity_data=create_data, db_adapter=db_adapter
-        )
+        data: EntityDTO = entity.create(entity_data=create_data, db_adapter=db_adapter)
     except (DuplicateRecord, EntityValidationError) as err:
         raise HTTPException(400, str(err))
     return data
@@ -110,9 +105,7 @@ def delete_entity(
     user=Depends(get_current_user),
 ) -> None:
     # call create use case
-    entity.delete(
-        uuid=uuid, entity_type=entity_type, db_adapter=db_adapter
-    )
+    entity.delete(uuid=uuid, entity_type=entity_type, db_adapter=db_adapter)
     return
 
 
@@ -138,5 +131,5 @@ def import_entities(
         entities = entity.create_entities_from_file(entity_type, fileDTO, db_adapter)
     except JSONDecodeError as err:
         raise HTTPException(400, str(err))
-    
+
     return entities

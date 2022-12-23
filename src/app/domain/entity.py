@@ -131,11 +131,10 @@ def create_entities_from_file(
     fileDTO: FileDTO,
     db_adapter: DbAdapter,
 ) -> List[EntityDTO]:
-    
+
     entities_dto: List[EntityDTO] = parse_json(entity_type, fileDTO, db_adapter)
     entities: List[EntityDTO] = create_entities(entities_dto, db_adapter=db_adapter)
     return entities
-
 
 
 def read(uuid: str, entity_type: str, db_adapter: DbAdapter) -> EntityDTO:

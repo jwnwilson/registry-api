@@ -8,13 +8,12 @@ from hex_lib.adapter.out.db.exceptions import DuplicateRecord
 from hex_lib.ports.db import ListParams
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
+from app.domain import entity_type
 from app.ports.entity_type import (
     CreateEntityTypeDTO,
     EntityTypeDTO,
     UpdateEntityTypeDTO,
 )
-from app.domain import entity_type
-
 
 logger = logging.getLogger(__name__)
 

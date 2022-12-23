@@ -3,6 +3,7 @@ def test_entity_list(client, test_data):
     assert response.status_code == 200
     assert len(response.json()["items"]) == 2
 
+
 def test_entity_create(client, test_user, test_data):
     response = client.post(
         "/entity/product/",
@@ -11,7 +12,7 @@ def test_entity_create(client, test_user, test_data):
             "entity_type": "product",
             "fields": {"product_number": "54321"},
             "links": {},
-            "metadata": {}
+            "metadata": {},
         },
     )
     assert response.status_code == 200, response.json()
@@ -64,10 +65,7 @@ def test_entity_set_relatioship(client, test_data, test_user):
             "entity_type": "product",
             "fields": {"product_number": "12345"},
             "links": {
-                org_uuid: {
-                    "entity_type": "organisation",
-                    "link_type": "related"
-                },
+                org_uuid: {"entity_type": "organisation", "link_type": "related"},
             },
             "metadata": {},
         },

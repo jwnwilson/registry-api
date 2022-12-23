@@ -58,15 +58,15 @@ def test_data(db, test_user):
     data = {
         "linkType_1": {
             "uuid": "d187540d-fe9e-47e4-b738-95a09661fe05",
-            "name": "related"
+            "name": "related",
         },
         "linkType_2": {
             "uuid": "2e4127f1-1977-4ab0-989c-62fbfba66a25",
-            "name": "related_to"
+            "name": "related_to",
         },
         "linkType_3": {
             "uuid": "47aaba9c-bf74-493a-bd42-0d6dad80c4e3",
-            "name": "related_from"
+            "name": "related_from",
         },
         "productEntityType": {
             "name": "product",
@@ -138,7 +138,7 @@ def test_data(db, test_user):
             "links": {
                 "2ddc873b-dbe9-4c89-944d-75b58ae33cca": {
                     "entity_type": "organisation",
-                    "link_type": "related"
+                    "link_type": "related",
                 }
             },
             "metadata": {},
@@ -152,7 +152,7 @@ def test_data(db, test_user):
             "links": {
                 "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
                     "entity_type": "organisation",
-                    "link_type": "related"
+                    "link_type": "related",
                 }
             },
             "metadata": {},
@@ -163,8 +163,7 @@ def test_data(db, test_user):
             "entity_type": "product",
             "uuid": "259f80d6-5f1a-4d87-9440-bbbc155db294",
             "fields": {"product_number": "54321"},
-            "links": {
-            },
+            "links": {},
             "metadata": {},
         },
     }
