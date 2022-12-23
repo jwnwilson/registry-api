@@ -1,12 +1,12 @@
 import logging
-from json import JSONDecodeError
-from typing import List
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from typing import List
+from json import JSONDecodeError
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.bases import AbstractPage
 from hex_lib.adapter.out.db.exceptions import DuplicateRecord
-from hex_lib.ports.db import ListParams
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain.exceptions import EntityValidationError
@@ -19,7 +19,7 @@ from app.ports.entity import (
     UpdateEntityPatchDTO,
 )
 from app.ports.file import FileDTO
-from app.use_case import entity as entity_uc
+from app.domain import entity
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +38,8 @@ def list_entity(
     user=Depends(get_current_user),
 ) -> AbstractPage[EntityDTO]:
     query_param: QueryParam = QueryParam(entity_type=entity_type)
-    data: List[EntityDTO] = entity_uc.list(
-        query_param, db_adapter=db_adapter, user=user
+    data: List[EntityDTO] = entity.list(
+        query_param, db_adapter=db_adapter
     )
     return paginate(data)
 
@@ -51,8 +51,8 @@ def get_entity(
     db_adapter=Depends(get_db_adapater),
     user=Depends(get_current_user),
 ) -> EntityDTO:
-    data: EntityDTO = entity_uc.read(
-        uuid=uuid, entity_type=entity_type, db_adapter=db_adapter, user=user
+    data: EntityDTO = entity.read(
+        uuid=uuid, entity_type=entity_type, db_adapter=db_adapter
     )
     return data
 
@@ -71,8 +71,8 @@ def create_entity(
     except EntityValidationError as err:
         raise HTTPException(400, str(err))
     try:
-        data: EntityDTO = entity_uc.create(
-            entity_data=create_data, db_adapter=db_adapter, user=user
+        data: EntityDTO = entity.create(
+            entity_data=create_data, db_adapter=db_adapter
         )
     except (DuplicateRecord, EntityValidationError) as err:
         raise HTTPException(400, str(err))
@@ -91,12 +91,11 @@ def update_entity(
         update_entity_data: UpdateEntityDTO = UpdateEntityDTO(
             entity_type=entity_type, **entity_data.dict()
         )
-        data: EntityDTO = entity_uc.update(
+        data: EntityDTO = entity.update(
             uuid=uuid,
             entity_type=entity_type,
             entity_data=update_entity_data,
             db_adapter=db_adapter,
-            user=user,
         )
     except (DuplicateRecord, EntityValidationError) as err:
         raise HTTPException(400, str(err))
@@ -111,8 +110,8 @@ def delete_entity(
     user=Depends(get_current_user),
 ) -> None:
     # call create use case
-    entity_uc.delete(
-        uuid=uuid, entity_type=entity_type, db_adapter=db_adapter, user=user
+    entity.delete(
+        uuid=uuid, entity_type=entity_type, db_adapter=db_adapter
     )
     return
 
@@ -136,9 +135,8 @@ def import_entities(
         file=file.file, filename=file.filename, content_type=file.content_type
     )
     try:
-        entities: List[EntityDTO] = entity_uc.create_entities_from_file(
-            entity_type=entity_type, file=fileDTO, db_adapter=db_adapter, user=user
-        )
+        entities = entity.create_entities_from_file(entity_type, fileDTO, db_adapter)
     except JSONDecodeError as err:
         raise HTTPException(400, str(err))
+    
     return entities

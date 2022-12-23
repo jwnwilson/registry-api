@@ -51,10 +51,23 @@ def db(test_user):
 
 @pytest.fixture
 def test_data(db, test_user):
+    db.client[db.db]["linkType"].delete_many({})
     db.client[db.db]["entityType"].delete_many({})
     db.client[db.db]["entity"].delete_many({})
 
     data = {
+        "linkType_1": {
+            "uuid": "d187540d-fe9e-47e4-b738-95a09661fe05",
+            "name": "related"
+        },
+        "linkType_2": {
+            "uuid": "2e4127f1-1977-4ab0-989c-62fbfba66a25",
+            "name": "related_to"
+        },
+        "linkType_3": {
+            "uuid": "47aaba9c-bf74-493a-bd42-0d6dad80c4e3",
+            "name": "related_from"
+        },
         "productEntityType": {
             "name": "product",
             "description": "",
@@ -71,7 +84,7 @@ def test_data(db, test_user):
             },
             "links": {
                 "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
-                    "direction": "bi_directional",
+                    "link_type": "related",
                     "entity_type": "organisation",
                 }
             },
@@ -93,7 +106,7 @@ def test_data(db, test_user):
             },
             "links": {
                 "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
-                    "direction": "bi_directional",
+                    "link_type": "related",
                     "entity_type": "organisation",
                 }
             },
@@ -116,7 +129,21 @@ def test_data(db, test_user):
             "links": {},
             "metadata": {},
         },
-        "entity": {
+        "organisation_1": {
+            "name": "test org",
+            "description": "",
+            "entity_type": "product",
+            "uuid": "444f41fb-30af-4997-a993-54ba5d4466e8",
+            "fields": {"name": "Test Org"},
+            "links": {
+                "2ddc873b-dbe9-4c89-944d-75b58ae33cca": {
+                    "entity_type": "organisation",
+                    "link_type": "related"
+                }
+            },
+            "metadata": {},
+        },
+        "entity_1": {
             "name": "knife",
             "description": "",
             "entity_type": "product",
@@ -124,17 +151,31 @@ def test_data(db, test_user):
             "fields": {"product_number": "12345"},
             "links": {
                 "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
-                    "direction": "bi_directional",
                     "entity_type": "organisation",
+                    "link_type": "related"
                 }
+            },
+            "metadata": {},
+        },
+        "entity_2": {
+            "name": "spoon",
+            "description": "",
+            "entity_type": "product",
+            "uuid": "259f80d6-5f1a-4d87-9440-bbbc155db294",
+            "fields": {"product_number": "54321"},
+            "links": {
             },
             "metadata": {},
         },
     }
 
+    db.create("linkType", data["linkType_1"])
+    db.create("linkType", data["linkType_2"])
+    db.create("linkType", data["linkType_3"])
     db.create("entityType", data["productEntityType"])
     db.create("entityType", data["userEntityType"])
     db.create("entityType", data["orgEntityType"])
-    db.create("entity", data["entity"])
+    db.create("entity", data["entity_1"])
+    db.create("entity", data["entity_2"])
 
     return data

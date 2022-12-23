@@ -22,6 +22,22 @@ TABLE = "entity"
 logger = logging.getLogger(__name__)
 
 
+def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
+    json_data = json.load(parse_json.file)
+    entities = []
+    for entity in json_data:
+        entities.append(
+            CreateEntityDTO(
+                name=entity["name"],
+                entity_type=entity_type,
+                fields=entity.get("fields", []),
+                links=entity.get("links", []),
+            )
+        )
+    _validate_fields(entities, db_adapter)
+    return entities
+
+
 def _validate_fields(
     entity_data: Union[List[CreateEntityDTO], List[UpdateEntityDTO], List[EntityDTO]],
     db_adapter: DbAdapter,
@@ -99,6 +115,29 @@ def create(entity_data: CreateEntityDTO, db_adapter: DbAdapter) -> EntityDTO:
     return entity_dto
 
 
+def create_entities(
+    entity_data: Union[List[CreateEntityDTO], List[EntityDTO]],
+    db_adapter: DbAdapter,
+) -> List[EntityDTO]:
+    entity_dtos = []
+
+    for entity in entity_data:
+        entity_dtos.append(_create_entity(entity, db_adapter))
+    return entity_dtos
+
+
+def create_entities_from_file(
+    entity_type: str,
+    fileDTO: FileDTO,
+    db_adapter: DbAdapter,
+) -> List[EntityDTO]:
+    
+    entities_dto: List[EntityDTO] = parse_json(entity_type, fileDTO, db_adapter)
+    entities: List[EntityDTO] = create_entities(entities_dto, db_adapter=db_adapter)
+    return entities
+
+
+
 def read(uuid: str, entity_type: str, db_adapter: DbAdapter) -> EntityDTO:
     data = db_adapter.read(TABLE, uuid)
     return EntityDTO(**data)
@@ -120,30 +159,3 @@ def update(
 def delete(uuid: str, entity_type: str, db_adapter: DbAdapter) -> None:
     db_adapter.delete(table=TABLE, record_id=uuid)
     return
-
-
-def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
-    json_data = json.load(parse_json.file)
-    entities = []
-    for entity in json_data:
-        entities.append(
-            CreateEntityDTO(
-                name=entity["name"],
-                entity_type=entity_type,
-                fields=entity.get("fields", []),
-                links=entity.get("links", []),
-            )
-        )
-    _validate_fields(entities, db_adapter)
-    return entities
-
-
-def create_entities(
-    entity_data: Union[List[CreateEntityDTO], List[EntityDTO]],
-    db_adapter: DbAdapter,
-) -> List[EntityDTO]:
-    entity_dtos = []
-
-    for entity in entity_data:
-        entity_dtos.append(_create_entity(entity, db_adapter))
-    return entity_dtos

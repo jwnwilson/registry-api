@@ -25,10 +25,10 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Add relationship metadata
-    - The TYPE of relationship (myabe this could be configurable)
-        - e.g. blocker, caused by, owns
-        - default to "related"
+- Add link type endpoints 
+- The TYPE of relationship to link creation / edit
+    - e.g. blocker, caused by, owns
+    - default to "related", "related_to" or "related_from"
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
 - Deploy project (lambda + dynamodb)
 - Filter by links (test filtering by org)
