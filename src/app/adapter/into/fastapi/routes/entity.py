@@ -88,7 +88,6 @@ def update_entity(
         )
         data: EntityDTO = entity.update(
             uuid=uuid,
-            entity_type=entity_type,
             entity_data=update_entity_data,
             db_adapter=db_adapter,
         )
@@ -105,7 +104,7 @@ def delete_entity(
     user=Depends(get_current_user),
 ) -> None:
     # call create use case
-    entity.delete(uuid=uuid, entity_type=entity_type, db_adapter=db_adapter)
+    entity.delete(uuid=uuid, db_adapter=db_adapter)
     return
 
 

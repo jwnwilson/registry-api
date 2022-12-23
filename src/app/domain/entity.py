@@ -80,7 +80,6 @@ def _validate_fields(
 
 
 def list(query_param: QueryParam, db_adapter: DbAdapter) -> List[EntityDTO]:
-
     filters = query_param.filters or {}
     filters.update({"entity_type": query_param.entity_type})
     params = ListParams(limit=query_param.limit, filters=filters)
@@ -144,7 +143,6 @@ def read(uuid: str, entity_type: str, db_adapter: DbAdapter) -> EntityDTO:
 
 def update(
     uuid: str,
-    entity_type: str,
     entity_data: UpdateEntityDTO,
     db_adapter: DbAdapter,
 ) -> EntityDTO:
@@ -155,6 +153,6 @@ def update(
     return EntityDTO(**data)
 
 
-def delete(uuid: str, entity_type: str, db_adapter: DbAdapter) -> None:
+def delete(uuid: str, db_adapter: DbAdapter) -> None:
     db_adapter.delete(table=TABLE, record_id=uuid)
     return
