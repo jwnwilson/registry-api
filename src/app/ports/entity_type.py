@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-from .link import LinkFields
+from .link_type import LinkFields
 
 
 class DataEnum(Enum):

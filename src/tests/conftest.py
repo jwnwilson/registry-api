@@ -59,14 +59,17 @@ def test_data(db, test_user):
         "linkType_1": {
             "uuid": "d187540d-fe9e-47e4-b738-95a09661fe05",
             "name": "related",
+            "back_link": "related"
         },
         "linkType_2": {
             "uuid": "2e4127f1-1977-4ab0-989c-62fbfba66a25",
             "name": "related_to",
+            "back_link": "related_from"
         },
         "linkType_3": {
             "uuid": "47aaba9c-bf74-493a-bd42-0d6dad80c4e3",
             "name": "related_from",
+            "back_link": "related_from"
         },
         "productEntityType": {
             "name": "product",

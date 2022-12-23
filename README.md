@@ -25,7 +25,6 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Add link type endpoints 
 - The TYPE of relationship to link creation / edit
     - e.g. blocker, caused by, owns
     - default to "related", "related_to" or "related_from"

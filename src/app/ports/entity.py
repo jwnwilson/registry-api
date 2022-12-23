@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 
 from pydantic import BaseModel
 
-from .link import LinkFields
+from .link_type import LinkFields
 
 Fields = Dict[str, Any]
 

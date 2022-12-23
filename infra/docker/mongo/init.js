@@ -1,5 +1,5 @@
 function createCollections(db) {
-  var collections = ['entityType', 'entity'];
+  var collections = ['entityType', 'entity', 'linkType'];
 
   for (var i=0; i< collections.length; i++) {
     var table = collections[i];
@@ -101,6 +101,23 @@ db.entityType.insert({
   "metadata": {
     "icon": "Person"
   }
+});
+
+// Add link types
+db.linkType.insert({
+  "name": "related",
+  "uuid": "7cf1db4e-7173-4f6b-ad9c-d94f4b721f4c",
+  "back_link": "related"
+});
+db.linkType.insert({
+  "name": "related_to",
+  "uuid": "913d909e-e351-4871-ae32-4bd04d795b14",
+  "back_link": "related_from"
+});
+db.linkType.insert({
+  "name": "related_from",
+  "uuid": "85329e2e-5dad-494d-8f7f-b9231e89308d",
+  "back_link": "related_to"
 });
 
 // Add entities

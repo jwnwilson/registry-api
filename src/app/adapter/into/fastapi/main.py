@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 
 from .dependencies import get_current_user
-from .routes import entity, entity_type
+from .routes import entity, entity_type, link_type
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "")
 
@@ -21,6 +21,7 @@ app = FastAPI(
 )
 app.include_router(entity_type.router, dependencies=PROTECTED)
 app.include_router(entity.router, dependencies=PROTECTED)
+app.include_router(link_type.router, dependencies=PROTECTED)
 
 add_pagination(app)
 
