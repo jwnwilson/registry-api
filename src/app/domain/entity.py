@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from app.ports.entity import CreateEntityDTO, EntityDTO, QueryParam, UpdateEntityDTO
 from app.ports.entity_type import EntityTypeDTO
 from app.ports.file import FileDTO
+from app.ports.link_type import LinkDTO, LinkTypeDTO
 
 from .entity_type import list as list_entity_types
 from .entity_type import read as read_entity_type
@@ -34,8 +35,74 @@ def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
                 links=entity.get("links", []),
             )
         )
-    _validate_fields(entities, db_adapter)
     return entities
+
+
+def get_entities_by_uuids(uuids: List[str], db_adapter: DbAdapter) -> List[EntityDTO]:
+    db_params = ListParams(filters={"uuid": {"$in": uuids}})
+    entities: List[EntityDTO] = [
+        EntityDTO(**data) for data in db_adapter.list(TABLE, db_params)
+    ]
+    return entities
+
+
+def _edit_linked_entity_backref(
+    entity: EntityDTO, linked_entity: EntityDTO, link_types: List[LinkTypeDTO]
+):
+    # Edit links
+    link_type = entity.links[linked_entity.uuid].link_type
+    back_link_type = [x for x in filter(lambda x: x.name == link_type, link_types)][0]
+    linked_entity.links[entity.uuid] = LinkDTO(
+        entity_type=entity.entity_type, link_type=back_link_type.name
+    )
+
+
+def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
+    # Create back links for entities this is linked to
+
+    # Get related entities
+    link_uuids = [uuid for uuid in entity.links.keys()]
+    linked_entities = get_entities_by_uuids(link_uuids, db_adapter)
+
+    # Get link types
+    link_types: List[LinkTypeDTO] = [
+        LinkTypeDTO(**data) for data in db_adapter.list("LinkType", ListParams())
+    ]
+
+    # Create new links
+    for linked_entity in linked_entities:
+        _edit_linked_entity_backref(entity, linked_entity, link_types)
+        db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
+
+
+def update_back_links(entity: EntityDTO, db_adapter: DbAdapter):
+    # Update back links for entities this is linked to
+
+    # Get existing links
+    current_entity_data = db_adapter.read(TABLE, entity.uuid)
+    current_entity: EntityDTO = EntityDTO(**current_entity_data)
+
+    # Get link diff
+    removed_links = filter(
+        lambda uuid: uuid not in current_entity.links.keys(), entity.links.keys()
+    )
+
+    # Get related entities
+    link_uuids = [uuid for uuid in entity.links.keys()]
+    linked_entities = get_entities_by_uuids(link_uuids, db_adapter)
+    # Get link types
+    link_types: List[LinkTypeDTO] = [
+        LinkTypeDTO(**data) for data in db_adapter.list("LinkType", ListParams())
+    ]
+
+    for linked_entity in linked_entities:
+        if linked_entity.uuid in removed_links:
+            # Delete remove links
+            del linked_entity.links[linked_entity.uuid]
+        else:
+            # Edit links
+            _edit_linked_entity_backref(entity, linked_entity, link_types)
+        db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
 
 
 def _validate_fields(
@@ -99,17 +166,20 @@ def _create_entity(
     entity_data: Union[CreateEntityDTO, EntityDTO],
     db_adapter: DbAdapter,
 ) -> EntityDTO:
+    _validate_fields([entity_data], db_adapter)  # type: ignore
     create_data = entity_data.dict()
     entity_uuid = str(uuid.uuid4())
     create_data["uuid"] = entity_uuid
 
     entity_data = db_adapter.create(TABLE, record_data=create_data)
-    return EntityDTO(**create_data)
+    entity = EntityDTO(**create_data)
+
+    create_back_links(entity, db_adapter)
+
+    return entity
 
 
 def create(entity_data: CreateEntityDTO, db_adapter: DbAdapter) -> EntityDTO:
-    _validate_fields([entity_data], db_adapter)
-
     entity_dto = _create_entity(entity_data, db_adapter)
     return entity_dto
 
@@ -150,7 +220,10 @@ def update(
     update_data = entity_data.dict()
     _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
     data = db_adapter.read(TABLE, uuid)
-    return EntityDTO(**data)
+    entity = EntityDTO(**data)
+
+    update_back_links(entity, db_adapter)
+    return entity
 
 
 def delete(uuid: str, db_adapter: DbAdapter) -> None:
