@@ -54,7 +54,7 @@ def test_entity_delete(client, test_data, test_user):
     assert len(response.json()["items"]) == (number_entities - 1)
 
 
-def test_entity_set_relatioship(client, test_data, test_user):
+def test_entity_set_relationship(client, test_data, test_user):
     entity_2_uuid = test_data["entity_2"]["uuid"]
     org_uuid = test_data["organisation_1"]["uuid"]
     response = client.patch(
@@ -70,7 +70,23 @@ def test_entity_set_relatioship(client, test_data, test_user):
             "metadata": {},
         },
     )
+    # Assert entity is updated
     assert response.status_code == 200, response.json()
-
     assert len(response.json()["links"]) > 0
     assert response.json()["links"][org_uuid]["link_type"] == "related"
+
+    # Assert other entity is also updated
+    response = client.get(f"/entity/organisation/{org_uuid}/")
+    assert response.status_code == 200, response.json()
+    assert len(response.json()["links"]) > 0
+    assert response.json()["links"][entity_2_uuid]["link_type"] == "related"
+
+
+def test_entity_removed_relationship(client, test_data, test_user):
+    # Verify relationship back link is removed successfully
+    pass
+
+
+def test_transaction_rollback():
+    # Test if data integrity is maintained if there is a error during an update request
+    pass

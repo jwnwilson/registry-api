@@ -19,5 +19,7 @@ def get_current_user(request: Request) -> UserData:
 
 
 def get_db_adapater(user_data: UserData = Depends(get_current_user)) -> DbAdapter:
-    # Setup a DB transaction for the length of the request
-    return MongoDbAdapter(config={}, user=user_data)
+    # Setup a DB transaction for the length of- the request
+    db = MongoDbAdapter(config={}, user=user_data)
+    with db.transaction_context_manager():
+        yield db

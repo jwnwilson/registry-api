@@ -38,7 +38,7 @@ def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
     return entities
 
 
-def get_entities_by_uuids(uuids: List[str], db_adapter: DbAdapter) -> List[EntityDTO]:
+def get_entities_by_links(uuids: List[str], db_adapter: DbAdapter) -> List[EntityDTO]:
     db_params = ListParams(filters={"uuid": {"$in": uuids}})
     entities: List[EntityDTO] = [
         EntityDTO(**data) for data in db_adapter.list(TABLE, db_params)
@@ -50,6 +50,7 @@ def _edit_linked_entity_backref(
     entity: EntityDTO, linked_entity: EntityDTO, link_types: List[LinkTypeDTO]
 ):
     # Edit links
+    breakpoint()
     link_type = entity.links[linked_entity.uuid].link_type
     back_link_type = [x for x in filter(lambda x: x.name == link_type, link_types)][0]
     linked_entity.links[entity.uuid] = LinkDTO(
@@ -61,8 +62,10 @@ def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
     # Create back links for entities this is linked to
 
     # Get related entities
-    link_uuids = [uuid for uuid in entity.links.keys()]
-    linked_entities = get_entities_by_uuids(link_uuids, db_adapter)
+    linked_entities = get_entities_by_links(
+        [link for link in entity.links],
+        db_adapter
+    )
 
     # Get link types
     link_types: List[LinkTypeDTO] = [
@@ -75,24 +78,26 @@ def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
         db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
 
 
-def update_back_links(entity: EntityDTO, db_adapter: DbAdapter):
+def update_back_links(uuid:str, entity: UpdateEntityDTO, db_adapter: DbAdapter):
     # Update back links for entities this is linked to
 
     # Get existing links
-    current_entity_data = db_adapter.read(TABLE, entity.uuid)
-    current_entity: EntityDTO = EntityDTO(**current_entity_data)
+    current_entity: EntityDTO = EntityDTO(**db_adapter.read(TABLE, uuid))
+    new_entity = EntityDTO(**{**current_entity.dict(), **entity.dict()})
 
     # Get link diff
     removed_links = filter(
-        lambda uuid: uuid not in current_entity.links.keys(), entity.links.keys()
+        lambda uuid: uuid not in entity.links.keys(), current_entity.links.keys()
     )
 
     # Get related entities
-    link_uuids = [uuid for uuid in entity.links.keys()]
-    linked_entities = get_entities_by_uuids(link_uuids, db_adapter)
+    linked_entities: List[EntityDTO] = get_entities_by_links(
+        [link for link in entity.links],
+        db_adapter
+    )
     # Get link types
     link_types: List[LinkTypeDTO] = [
-        LinkTypeDTO(**data) for data in db_adapter.list("LinkType", ListParams())
+        LinkTypeDTO(**data) for data in db_adapter.list("linkType", ListParams())
     ]
 
     for linked_entity in linked_entities:
@@ -101,7 +106,7 @@ def update_back_links(entity: EntityDTO, db_adapter: DbAdapter):
             del linked_entity.links[linked_entity.uuid]
         else:
             # Edit links
-            _edit_linked_entity_backref(entity, linked_entity, link_types)
+            _edit_linked_entity_backref(new_entity, linked_entity, link_types)
         db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
 
 
@@ -171,10 +176,9 @@ def _create_entity(
     entity_uuid = str(uuid.uuid4())
     create_data["uuid"] = entity_uuid
 
+    create_back_links(entity_data, db_adapter)
     entity_data = db_adapter.create(TABLE, record_data=create_data)
     entity = EntityDTO(**create_data)
-
-    create_back_links(entity, db_adapter)
 
     return entity
 
@@ -218,11 +222,12 @@ def update(
 ) -> EntityDTO:
     _validate_fields([entity_data], db_adapter)
     update_data = entity_data.dict()
+    update_back_links(uuid, entity_data, db_adapter)
+
     _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
     data = db_adapter.read(TABLE, uuid)
     entity = EntityDTO(**data)
 
-    update_back_links(entity, db_adapter)
     return entity
 
 

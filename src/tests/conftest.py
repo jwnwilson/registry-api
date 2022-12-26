@@ -179,5 +179,6 @@ def test_data(db, test_user):
     db.create("entityType", data["orgEntityType"])
     db.create("entity", data["entity_1"])
     db.create("entity", data["entity_2"])
+    db.create("entity", data["organisation_1"])
 
     return data
