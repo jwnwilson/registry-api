@@ -17,7 +17,9 @@ TABLE = "entityType"
 logger = logging.getLogger(__name__)
 
 
-def list_entity_type(query_param: ListParams, db_adapter: DbAdapter) -> List[EntityTypeDTO]:
+def list_entity_type(
+    query_param: ListParams, db_adapter: DbAdapter
+) -> List[EntityTypeDTO]:
     params = ListParams(limit=query_param.limit, filters=query_param.filters)
     data = db_adapter.list(TABLE, params)
     entity_types = []

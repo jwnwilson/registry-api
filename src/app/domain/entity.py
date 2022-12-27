@@ -61,10 +61,7 @@ def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
     # Create back links for entities this is linked to
 
     # Get related entities
-    linked_entities = get_entities_by_links(
-        [link for link in entity.links],
-        db_adapter
-    )
+    linked_entities = get_entities_by_links([link for link in entity.links], db_adapter)
 
     # Get link types
     link_types: List[LinkTypeDTO] = [
@@ -77,18 +74,22 @@ def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
         db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
 
 
-def update_back_links(current_entity: EntityDTO, new_entity: EntityDTO, db_adapter: DbAdapter):
+def update_back_links(
+    current_entity: EntityDTO, new_entity: EntityDTO, db_adapter: DbAdapter
+):
     # Update back links for entities this is linked to
 
     # Get link diff
-    removed_links = list(filter(
-        lambda uuid: uuid not in new_entity.links.keys(), current_entity.links.keys()
-    ))
+    removed_links = list(
+        filter(
+            lambda uuid: uuid not in new_entity.links.keys(),
+            current_entity.links.keys(),
+        )
+    )
 
     # Get related entities
     linked_entities: List[EntityDTO] = get_entities_by_links(
-        [link for link in (list(new_entity.links.keys()) + removed_links)],
-        db_adapter
+        [link for link in (list(new_entity.links.keys()) + removed_links)], db_adapter
     )
     # Get link types
     link_types: List[LinkTypeDTO] = [
