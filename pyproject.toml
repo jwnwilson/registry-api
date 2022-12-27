@@ -9,7 +9,7 @@ python = "^3.9"
 fastapi = "^0.83"
 uvicorn = "^0.16.0"
 requests = "^2.26.0"
-hex-lib = {extras = ["boto3", "pymongo"], version = "^0.2.13", source = "hex-lib"}
+hex-lib = {extras = ["boto3", "pymongo"], version = "^0.2.14", source = "hex-lib"}
 fastapi-pagination = "^0.10.0"
 pymongo = {extras = ["srv"], version = "^4.2.0"}
 jsonschema = "^4.16.0"

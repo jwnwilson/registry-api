@@ -14,7 +14,7 @@ from app.ports.entity_type import EntityTypeDTO
 from app.ports.file import FileDTO
 from app.ports.link_type import LinkDTO, LinkTypeDTO
 
-from .entity_type import list as list_entity_types
+from .entity_type import list_entity_type
 from .entity_type import read as read_entity_type
 from .exceptions import EntityValidationError
 
@@ -50,7 +50,6 @@ def _edit_linked_entity_backref(
     entity: EntityDTO, linked_entity: EntityDTO, link_types: List[LinkTypeDTO]
 ):
     # Edit links
-    breakpoint()
     link_type = entity.links[linked_entity.uuid].link_type
     back_link_type = [x for x in filter(lambda x: x.name == link_type, link_types)][0]
     linked_entity.links[entity.uuid] = LinkDTO(
@@ -78,21 +77,17 @@ def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
         db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
 
 
-def update_back_links(uuid:str, entity: UpdateEntityDTO, db_adapter: DbAdapter):
+def update_back_links(current_entity: EntityDTO, new_entity: EntityDTO, db_adapter: DbAdapter):
     # Update back links for entities this is linked to
 
-    # Get existing links
-    current_entity: EntityDTO = EntityDTO(**db_adapter.read(TABLE, uuid))
-    new_entity = EntityDTO(**{**current_entity.dict(), **entity.dict()})
-
     # Get link diff
-    removed_links = filter(
-        lambda uuid: uuid not in entity.links.keys(), current_entity.links.keys()
-    )
+    removed_links = list(filter(
+        lambda uuid: uuid not in new_entity.links.keys(), current_entity.links.keys()
+    ))
 
     # Get related entities
     linked_entities: List[EntityDTO] = get_entities_by_links(
-        [link for link in entity.links],
+        [link for link in (list(new_entity.links.keys()) + removed_links)],
         db_adapter
     )
     # Get link types
@@ -103,7 +98,7 @@ def update_back_links(uuid:str, entity: UpdateEntityDTO, db_adapter: DbAdapter):
     for linked_entity in linked_entities:
         if linked_entity.uuid in removed_links:
             # Delete remove links
-            del linked_entity.links[linked_entity.uuid]
+            del linked_entity.links[current_entity.uuid]
         else:
             # Edit links
             _edit_linked_entity_backref(new_entity, linked_entity, link_types)
@@ -117,7 +112,7 @@ def _validate_fields(
     # Get entity type for entity
     entity_type_name = entity_data[0].entity_type
     param = ListParams(filters={"name": entity_type_name})
-    entity_types = list_entity_types(param, db_adapter)
+    entity_types = list_entity_type(param, db_adapter)
     entity_types_len = len(entity_types)
 
     try:
@@ -151,7 +146,7 @@ def _validate_fields(
         raise EntityValidationError(str(err))
 
 
-def list(query_param: QueryParam, db_adapter: DbAdapter) -> List[EntityDTO]:
+def list_entities(query_param: QueryParam, db_adapter: DbAdapter) -> List[EntityDTO]:
     filters = query_param.filters or {}
     filters.update({"entity_type": query_param.entity_type})
     params = ListParams(limit=query_param.limit, filters=filters)
@@ -221,10 +216,12 @@ def update(
     db_adapter: DbAdapter,
 ) -> EntityDTO:
     _validate_fields([entity_data], db_adapter)
-    update_data = entity_data.dict()
-    update_back_links(uuid, entity_data, db_adapter)
+    current_entity: EntityDTO = EntityDTO(**db_adapter.read(TABLE, uuid))
+    new_entity = EntityDTO(**{**current_entity.dict(), **entity_data.dict()})
 
-    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
+    update_back_links(current_entity, new_entity, db_adapter)
+
+    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=new_entity.dict())
     data = db_adapter.read(TABLE, uuid)
     entity = EntityDTO(**data)
 

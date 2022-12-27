@@ -13,7 +13,7 @@ TABLE = "linkType"
 logger = logging.getLogger(__name__)
 
 
-def list(query_param: ListParams, db_adapter: DbAdapter) -> List[LinkTypeDTO]:
+def list_link_type(query_param: ListParams, db_adapter: DbAdapter) -> List[LinkTypeDTO]:
     params = ListParams(limit=query_param.limit, filters=query_param.filters)
     data = db_adapter.list(TABLE, params)
     link_types = []

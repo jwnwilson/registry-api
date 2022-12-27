@@ -30,7 +30,7 @@ def list_links(
     user=Depends(get_current_user),
 ) -> AbstractPage[LinkTypeDTO]:
     query_param = ListParams(filters=filters, limit=limit)
-    data: List[LinkTypeDTO] = link_type.list(
+    data: List[LinkTypeDTO] = link_type.list_link_type(
         query_param=query_param, db_adapter=db_adapter
     )
     return paginate(data)

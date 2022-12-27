@@ -135,12 +135,12 @@ def test_data(db, test_user):
         "organisation_1": {
             "name": "test org",
             "description": "",
-            "entity_type": "product",
+            "entity_type": "organisation",
             "uuid": "444f41fb-30af-4997-a993-54ba5d4466e8",
             "fields": {"name": "Test Org"},
             "links": {
                 "2ddc873b-dbe9-4c89-944d-75b58ae33cca": {
-                    "entity_type": "organisation",
+                    "entity_type": "product",
                     "link_type": "related",
                 }
             },
@@ -153,7 +153,7 @@ def test_data(db, test_user):
             "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
             "fields": {"product_number": "12345"},
             "links": {
-                "b8e6df9f-2b75-4f96-b955-70a216d170e5": {
+                "444f41fb-30af-4997-a993-54ba5d4466e8": {
                     "entity_type": "organisation",
                     "link_type": "related",
                 }

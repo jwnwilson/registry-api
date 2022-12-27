@@ -84,7 +84,31 @@ def test_entity_set_relationship(client, test_data, test_user):
 
 def test_entity_removed_relationship(client, test_data, test_user):
     # Verify relationship back link is removed successfully
-    pass
+    entity_2_uuid = test_data["entity_1"]["uuid"]
+    org_uuid = test_data["organisation_1"]["uuid"]
+
+    assert len(test_data["entity_1"]["links"]) > 0
+    assert len(test_data["organisation_1"]["links"]) > 0
+
+    response = client.patch(
+        f"/entity/product/{entity_2_uuid}/",
+        json={
+            "name": "knife",
+            "description": "",
+            "entity_type": "product",
+            "fields": {"product_number": "12345"},
+            "links": {},
+            "metadata": {},
+        },
+    )
+    # Assert entity is updated
+    assert response.status_code == 200, response.json()
+    assert len(response.json()["links"]) == 0
+
+    # Assert other entity is also updated
+    response = client.get(f"/entity/organisation/{org_uuid}/")
+    assert response.status_code == 200, response.json()
+    assert len(response.json()["links"]) == 0
 
 
 def test_transaction_rollback():

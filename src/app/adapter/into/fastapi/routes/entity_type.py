@@ -35,7 +35,7 @@ def list_entity_type(
 ) -> AbstractPage[EntityTypeDTO]:
     # call create use case
     query_param = ListParams(filters=filters, limit=limit)
-    data: List[EntityTypeDTO] = entity_type.list(
+    data: List[EntityTypeDTO] = entity_type.list_entity_type(
         query_param=query_param, db_adapter=db_adapter
     )
     return paginate(data)
