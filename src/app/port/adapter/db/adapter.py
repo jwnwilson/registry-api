@@ -1,7 +1,7 @@
 import contextlib
 from abc import ABC
 
-from .model.property_model import PropertyRepository
+# from .model.property_model import PropertyRepository
 
 
 class DbAdapaterException(Exception):
@@ -17,5 +17,9 @@ class DbAdapter(ABC):
         raise NotImplementedError
 
     @property
-    def property(self) -> PropertyRepository:
+    def repositories(self):
         raise NotImplementedError
+
+    # @property
+    # def property(self) -> PropertyRepository:
+    #     raise NotImplementedError

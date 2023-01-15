@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.port.db import DbAdapaterException, DbAdapter
+from app.port.adapter.db import DbAdapaterException, DbAdapter
 
 from .model import *
 from .model.base import Base

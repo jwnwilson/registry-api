@@ -3,7 +3,7 @@ from typing import Any, Callable, List, Optional, Type
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.ports.db import DbAdapter, Repository
+from app.port.adapter.db import DbAdapter, Repository
 
 
 class PaginatedData(BaseModel):

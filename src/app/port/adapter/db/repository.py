@@ -6,9 +6,14 @@ from typing import TYPE_CHECKING, Any, Optional, TypeVar
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
-    from .adapter import DbAdapter
+    from .sql.adapter import DbAdapter
 
 ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
+
+
+class ListParams(BaseModel):
+    limit: Optional[int]
+    filters: Optional[dict]
 
 
 class Repository(ABC):
@@ -22,7 +27,7 @@ class Repository(ABC):
         raise NotImplementedError
 
     def read_multi(
-        self, filters: Any = None, page_size: int = 100, page_number: int = 1
+        self, filters: Optional[ListParams] = None, page_size: int = 100, page_number: int = 1
     ) -> Any:
         raise NotImplementedError
 

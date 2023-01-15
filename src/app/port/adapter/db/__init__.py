@@ -1,1 +1,2 @@
-from .nosql.adapter import DbAdapter, ListParams
+from .adapter import DbAdapter
+from .repository import ListParams
