@@ -71,6 +71,3 @@ class SQLALchemyAdapter(DbAdapter):
             yield session
             self._session = None
 
-    @property
-    def property(self) -> PropertyRepository:
-        return PropertyRepositorySQL(self, Property, PropteryDTO)

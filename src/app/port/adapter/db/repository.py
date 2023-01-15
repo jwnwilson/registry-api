@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Optional, TypeVar
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
-    from .sql.adapter import DbAdapter
+    from .adapter import DbAdapter
 
 ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
 
@@ -14,6 +14,18 @@ ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
 class ListParams(BaseModel):
     limit: Optional[int]
     filters: Optional[dict]
+
+
+class Repositories(object):
+    def __init__(self):
+        self.repositories = {}
+    
+    def register_repository(self, name: str, repository: Repository):
+        assert name not in self.repositories, f"Repository '{name}' already registered"
+        self.repositoriese[name] = repository
+    
+    def __getattribute__(self, __name: str) -> Repository:
+        return object.__getattribute__(self, __name)
 
 
 class Repository(ABC):

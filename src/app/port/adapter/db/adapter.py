@@ -1,14 +1,15 @@
 import contextlib
 from abc import ABC
 
-# from .model.property_model import PropertyRepository
-
+from .repository import Repository, Repositories
 
 class DbAdapaterException(Exception):
     pass
 
 
 class DbAdapter(ABC):
+    _repositories = Repositories()
+
     @contextlib.contextmanager
     def transaction(self):
         raise NotImplementedError
@@ -16,10 +17,10 @@ class DbAdapter(ABC):
     def init_db(self):
         raise NotImplementedError
 
+    def register_repository(self, name: str, repository: Repository):
+        self._repositories.register_repository(name, repository)
+
     @property
     def repositories(self):
-        raise NotImplementedError
+        return self._repositories
 
-    # @property
-    # def property(self) -> PropertyRepository:
-    #     raise NotImplementedError

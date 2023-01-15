@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from app.port.db.model.property_model import PropertyRepository, PropteryDTO
+from app.ports.db.model.property_model import PropertyRepository, PropteryDTO
 
 from ..repository import SQLRepository
 from .base import BaseSQLModel

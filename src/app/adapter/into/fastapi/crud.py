@@ -85,7 +85,7 @@ class CrudRouter:
             obj_in: self.create_schema,  # type: ignore
             db: DbAdapter = Depends(self.db_dependency),
         ) -> self.response_schema:  # type: ignore
-            repositry: Repository = getattr(db, self.repository)
+            repositry: Repository = getattr(db.repositories, self.repository)
             return repositry.create(obj_in)
 
         return create_record
@@ -95,7 +95,7 @@ class CrudRouter:
             id: str,
             db: DbAdapter = Depends(self.db_dependency),
         ) -> self.response_schema:  # type: ignore
-            repositry: Repository = getattr(db, self.repository)
+            repositry: Repository = getattr(db.repositories, self.repository)
             return repositry.read(id)
 
         return read_record
@@ -104,7 +104,7 @@ class CrudRouter:
         def read_multiple_records(
             db: DbAdapter = Depends(self.db_dependency),
         ) -> PaginatedData:  # type: ignore
-            repositry: Repository = getattr(db, self.repository)
+            repositry: Repository = getattr(db.repositories, self.repository)
             return repositry.read_multi()
 
         return read_multiple_records
@@ -115,7 +115,7 @@ class CrudRouter:
             obj_in: self.update_schema,  # type: ignore
             db: DbAdapter = Depends(self.db_dependency),
         ) -> self.response_schema:  # type: ignore
-            repositry: Repository = getattr(db, self.repository)
+            repositry: Repository = getattr(db.repositories, self.repository)
             return repositry.update(id, obj_in)
 
         return update_record
@@ -125,7 +125,7 @@ class CrudRouter:
             id: str,
             db: DbAdapter = Depends(self.db_dependency),
         ):
-            repositry: Repository = getattr(db, self.repository)
+            repositry: Repository = getattr(db.repositories, self.repository)
             return repositry.delete(id)
 
         return delete_record
