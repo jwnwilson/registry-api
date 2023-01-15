@@ -25,9 +25,13 @@ POST /entity/<type>/upload
 
 ## TODO
 
+- Refactor db adpater to use repositories
+- Use crud framework to reduce code
+- Add tests
 - The TYPE of relationship to link creation / edit
     - e.g. blocker, caused by, owns
     - default to "related", "related_to" or "related_from"
+    - Update UI to send this data
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
 - Deploy project (lambda + dynamodb)
 - Filter by links (test filtering by org)

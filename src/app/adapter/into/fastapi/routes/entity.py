@@ -37,7 +37,7 @@ def list_entity(
     user=Depends(get_current_user),
 ) -> AbstractPage[EntityDTO]:
     query_param: QueryParam = QueryParam(entity_type=entity_type)
-    data: List[EntityDTO] = entity.list(query_param, db_adapter=db_adapter)
+    data: List[EntityDTO] = entity.list_entities(query_param, db_adapter=db_adapter)
     return paginate(data)
 
 
