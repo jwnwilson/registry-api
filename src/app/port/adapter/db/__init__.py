@@ -1,2 +1,2 @@
 from .adapter import DbAdapter
-from .repository import ListParams
+from .repository import Repository, ListParams

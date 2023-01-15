@@ -19,18 +19,17 @@ logger = logging.getLogger(__name__)
 
 
 class MongoRepository(Repository):
+    model_dto: Type[ModelDTOType]
+    table: str
+
     def __init__(
         self,
-        db: MongoDbAdapter,
-        model: Type[ModelType],
-        model_dto: Type[ModelDTOType],
+        db: MongoDbAdapter
     ):
         self.db: MongoDbAdapter = db
-        self.model: Type[ModelType] = model
-        self.model_dto: Type[ModelDTOType] = model_dto
 
-    def list(self, table: str, params: ListParams) -> List[dict]:
-        collection = self.client[self.db][table]
+    def list(self, table: str, params: ListParams) -> List[model_dto]:
+        collection = self.db.client[self.db][table]
         filters = {}
         if params.filters:
             filters.update(params.filters)
@@ -42,15 +41,15 @@ class MongoRepository(Repository):
 
         return list_data
 
-    def read(self, table: str, record_id: str) -> dict:
-        collection = self.client[self.db][table]
+    def read(self, table: str, record_id: str) -> model_dto:
+        collection = self.db.client[self.db][table]
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
         return record
 
-    def create(self, table: str, record_data: dict) -> dict:
-        collection = self.client[self.db][table]
+    def create(self, table: str, record_data: dict) -> model_dto:
+        collection = self.db.client[self.db][table]
         mongo_data = {**record_data, **{"_id": record_data["uuid"]}}
         try:
             collection.insert_one(mongo_data)
@@ -63,11 +62,11 @@ class MongoRepository(Repository):
             raise DuplicateRecord(error)
 
     def delete(self, table: str, record_id: str):
-        collection = self.client[self.db][table]
+        collection = self.db.client[self.db][table]
         collection.delete_one({"uuid": record_id})
 
-    def update(self, table: str, record_id: str, record_data: dict) -> dict:
-        collection = self.client[self.db][table]
+    def update(self, table: str, record_id: str, record_data: dict) -> model_dto:
+        collection = self.db.client[self.db][table]
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
@@ -78,7 +77,3 @@ class MongoRepository(Repository):
             query, record, upsert=True
         ).raw_result
         return updated_record
-
-    def create_table(self, table: str, **kwargs):
-        collection = self.client[self.db][table]
-        return collection

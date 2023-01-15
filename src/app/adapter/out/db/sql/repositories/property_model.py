@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String
 
-from app.ports.db.model.property_model import PropertyRepository, PropteryDTO
-
 from ..repository import SQLRepository
 from .base import BaseSQLModel
 
@@ -16,5 +14,7 @@ class Property(BaseSQLModel):
     country = Column(String(80), nullable=True)
 
 
-class PropertyRepositorySQL(SQLRepository, PropertyRepository):
-    pass
+class PropertyRepositorySQL(SQLRepository):
+    model = Property
+    model_dto = PropertyDTO
+

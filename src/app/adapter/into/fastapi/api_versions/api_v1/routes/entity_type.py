@@ -1,6 +1,5 @@
 import logging
 
-from ....crud import CrudRouter
 from app.adapter.into.fastapi.dependencies import get_db
 from app.domain import entity_type
 from app.port.domain.entity_type import (
@@ -8,6 +7,9 @@ from app.port.domain.entity_type import (
     EntityTypeDTO,
     UpdateEntityTypeDTO,
 )
+
+from ....crud import CrudRouter
+
 
 logger = logging.getLogger(__name__)
 

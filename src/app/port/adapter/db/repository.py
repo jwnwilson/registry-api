@@ -21,11 +21,15 @@ class Repositories(object):
         self.repositories = {}
     
     def register_repository(self, name: str, repository: Repository):
-        assert name not in self.repositories, f"Repository '{name}' already registered"
-        self.repositoriese[name] = repository
+        # assert name not in self.repositories, f"Repository '{name}' already registered"
+        self.repositories[name] = repository
     
-    def __getattribute__(self, __name: str) -> Repository:
-        return object.__getattribute__(self, __name)
+    def __getattribute__(self, name: str) -> Repository:
+        repositories = object.__getattribute__(self, "repositories")
+        if name in repositories:
+            return repositories[name]
+        else:
+            return object.__getattribute__(self, name)
 
 
 class Repository(ABC):

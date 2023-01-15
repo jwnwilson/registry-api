@@ -16,9 +16,15 @@ class DbAdapter(ABC):
 
     def init_db(self):
         raise NotImplementedError
+    
+    def init_repositories(self):
+        raise NotImplementedError
 
     def register_repository(self, name: str, repository: Repository):
         self._repositories.register_repository(name, repository)
+    
+    def create_table(self, table: str, **kwargs):
+        raise NotImplementedError
 
     @property
     def repositories(self):

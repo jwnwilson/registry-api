@@ -6,7 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Query
 
-from app.port.db.repository import Repository
+from app.port.adapter.db.repository import Repository
 
 from .exception import RecordNotFound
 from .model.base import BaseSQLModel
@@ -19,15 +19,14 @@ ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
 
 
 class SQLRepository(Repository):
+    model: Type[ModelType]
+    model_dto: Type[ModelDTOType]
+
     def __init__(
         self,
         db: SQLALchemyAdapter,
-        model: Type[ModelType],
-        model_dto: Type[ModelDTOType],
     ):
         self.db: SQLALchemyAdapter = db
-        self.model: Type[ModelType] = model
-        self.model_dto: Type[ModelDTOType] = model_dto
 
     def create(self, obj_in: ModelDTOType) -> ModelDTOType:
         obj_in_data = jsonable_encoder(obj_in)

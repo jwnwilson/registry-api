@@ -4,11 +4,11 @@ import os
 from typing import Dict, List, Optional
 
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
 
-from app.port.adapter.db import DbAdapter, ListParams
+from app.port.adapter.db import DbAdapter
 from app.port.domain.user import UserData
-from ..exceptions import DuplicateRecord, RecordNotFound
+
+from .model import EntityTypeRepository, EntityRepository, LinkTypeRepository
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,8 @@ class MongoDbAdapter(DbAdapter):
     def __init__(self, config: dict, user: UserData, *args, **kwargs):
         self.config = config
         self.user = user
-        self._configure_db()
+        self.init_db()
+        self.init_repositories()
 
     @contextlib.contextmanager
     def transaction(self):
@@ -28,7 +29,7 @@ class MongoDbAdapter(DbAdapter):
             with session.start_transaction():
                 yield
 
-    def _configure_db(self):
+    def init_db(self):
         uri = "mongodb://%s:%s@%s:27017/%s?retryWrites=true&w=majority" % (
             self.config.get("user", os.environ["MONGO_USER"]),
             self.config.get("password", os.environ["MONGO_PASSWORD"]),
@@ -44,3 +45,12 @@ class MongoDbAdapter(DbAdapter):
             self.clients[db_client_key] = self.client
         else:
             self.client: MongoClient = self.clients[db_client_key]
+
+    def init_repositories(self):
+        self.register_repository("link_type", LinkTypeRepository(self.db))
+        self.register_repository("entity_type", EntityTypeRepository(self.db))
+        self.register_repository("entity", EntityRepository(self.db))
+    
+    def create_table(self, table: str, **kwargs):
+        collection = self.client[self.db][table]
+        return collection
