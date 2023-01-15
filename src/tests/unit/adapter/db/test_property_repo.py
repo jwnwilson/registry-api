@@ -2,8 +2,8 @@ import pytest
 
 from app.adapter.db.model.property_model import Property
 from app.adapter.db.repository import SQLRepository
-from app.ports.db import DbAdapter
-from app.ports.db.model.property_model import PropteryDTO
+from app.port.db import DbAdapter
+from app.port.db.model.property_model import PropteryDTO
 from tests.helpers.factories import property_factory  # type: ignore
 
 

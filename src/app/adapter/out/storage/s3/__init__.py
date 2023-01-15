@@ -4,8 +4,8 @@ from typing import List
 
 import boto3
 
-from hex_lib.ports.storage import StorageAdapter, StorageData, UploadUrlData
-from hex_lib.ports.user import UserData
+from app.port.adapter.storage import StorageAdapter, StorageData, UploadUrlData
+from app.port.domain.user import UserData
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "")
 AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION", "eu-west-1")

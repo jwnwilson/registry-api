@@ -1,7 +1,7 @@
 from fastapi import Depends
 from hex_lib.adapter.out.db import MongoDbAdapter
-from hex_lib.ports.db import DbAdapter
-from hex_lib.ports.user import UserData
+from hex_lib.port.db import DbAdapter
+from hex_lib.port.user import UserData
 from starlette.requests import Request
 
 from app.adapter.into.fastapi.dependencies import get_current_user

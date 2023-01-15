@@ -2,10 +2,11 @@ import os
 
 from fastapi import Depends
 from fastapi.security import HTTPBearer
-from hex_lib.adapter.out.db import MongoDbAdapter
-from hex_lib.ports.db import DbAdapter
-from hex_lib.ports.user import UserData
 from starlette.requests import Request
+
+from ...out.db.mongo import MongoDbAdapter
+from app.port.adapter.db import DbAdapter
+from app.port.domain.user import UserData
 
 ENVIRONMENT = os.environ["ENVIRONMENT"]
 
@@ -23,3 +24,9 @@ def get_db_adapater(user_data: UserData = Depends(get_current_user)) -> DbAdapte
     db = MongoDbAdapter(config={}, user=user_data)
     with db.transaction_context_manager():
         yield db
+
+
+# def get_db() -> Generator[DbAdapter, None, None]:
+#     adapter = SQLALchemyAdapter(DB_URL)
+#     with adapter.transaction():
+#         yield adapter

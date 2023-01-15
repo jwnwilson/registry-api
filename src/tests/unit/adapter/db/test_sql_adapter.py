@@ -1,7 +1,7 @@
 import pytest
 
 from app.adapter.db.adapter import SessionNotInitialised
-from app.ports.db.model.property_model import PropertyRepository
+from app.port.db.model.property_model import PropertyRepository
 
 
 def test_create_session(db_adapter):

@@ -6,9 +6,8 @@ from typing import Dict, List, Optional
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from hex_lib.ports.db import DbAdapter, ListParams
-from hex_lib.ports.user import UserData
-
+from .....port.adapter.db import DbAdapter, ListParams
+from .....port.domain.user import UserData
 from ..exceptions import DuplicateRecord, RecordNotFound
 
 logger = logging.getLogger(__name__)

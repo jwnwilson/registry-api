@@ -3,16 +3,16 @@ import logging
 import uuid
 from typing import List, Union
 
-from hex_lib.ports.db import DbAdapter, ListParams
-from hex_lib.ports.user import UserData
 from jsonschema import validate  # type: ignore
 from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
 from pydantic import ValidationError
 
-from app.ports.entity import CreateEntityDTO, EntityDTO, QueryParam, UpdateEntityDTO
-from app.ports.entity_type import EntityTypeDTO
-from app.ports.file import FileDTO
-from app.ports.link_type import LinkDTO, LinkTypeDTO
+from app.port.adapter.db import DbAdapter, ListParams
+from app.port.domain.user import UserData
+from app.port.domain.entity import CreateEntityDTO, EntityDTO, QueryParam, UpdateEntityDTO
+from app.port.domain.entity_type import EntityTypeDTO
+from app.port.domain.file import FileDTO
+from app.port.domain.link_type import LinkDTO, LinkTypeDTO
 
 from .entity_type import list_entity_type
 from .entity_type import read as read_entity_type

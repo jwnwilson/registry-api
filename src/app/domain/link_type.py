@@ -2,11 +2,11 @@ import logging
 import uuid
 from typing import List
 
-from hex_lib.ports.db import DbAdapter, ListParams
-from hex_lib.ports.user import UserData
 from pydantic import ValidationError
 
-from app.ports.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
+from app.port.adapter.db import DbAdapter, ListParams
+from app.port.domain.user import UserData
+from app.port.domain.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
 
 TABLE = "linkType"
 

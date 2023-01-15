@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.adapter.db import SQLALchemyAdapter
-from app.ports.db import DbAdapter
+from app.port.db import DbAdapter
 
 # Create local file db
 SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"

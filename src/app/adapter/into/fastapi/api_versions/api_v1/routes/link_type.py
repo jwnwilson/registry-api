@@ -5,12 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.bases import AbstractPage
 from hex_lib.adapter.out.db.exceptions import DuplicateRecord
-from hex_lib.ports.db import ListParams
+from hex_lib.port.db import ListParams
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain import link_type
 from app.domain.exceptions import EntityValidationError
-from app.ports.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
+from app.port.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
 
 logger = logging.getLogger(__name__)
 

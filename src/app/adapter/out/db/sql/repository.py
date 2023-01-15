@@ -6,7 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Query
 
-from app.ports.db.repository import Repository
+from app.port.db.repository import Repository
 
 from .exception import RecordNotFound
 from .model.base import BaseSQLModel

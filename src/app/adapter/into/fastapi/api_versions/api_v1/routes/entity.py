@@ -10,7 +10,7 @@ from hex_lib.adapter.out.db.exceptions import DuplicateRecord
 from app.adapter.into.fastapi.dependencies import get_current_user, get_db_adapater
 from app.domain import entity
 from app.domain.exceptions import EntityValidationError
-from app.ports.entity import (
+from app.port.entity import (
     CreateEntityDTO,
     CreateEntityPostDTO,
     EntityDTO,
@@ -18,7 +18,7 @@ from app.ports.entity import (
     UpdateEntityDTO,
     UpdateEntityPatchDTO,
 )
-from app.ports.file import FileDTO
+from app.port.file import FileDTO
 
 logger = logging.getLogger(__name__)
 

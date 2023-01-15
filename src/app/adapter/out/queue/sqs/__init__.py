@@ -4,8 +4,8 @@ import uuid
 
 import boto3
 
-from hex_lib.ports.task import TaskAdapter, TaskArgs, TaskData
-from hex_lib.ports.user import UserData
+from app.port.adapter.task import TaskAdapter, TaskArgs, TaskData
+from app.port.domain.user import UserData
 
 logger = logging.getLogger(__name__)
 

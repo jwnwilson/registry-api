@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from ..ports.user import UserData
+from ..domain.user import UserData
 
 
 class StorageData(BaseModel):
