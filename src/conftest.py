@@ -7,8 +7,8 @@ os.environ["SQLALCHEMY_SILENCE_UBER_WARNING"] = "1"
 import pytest
 from fastapi.testclient import TestClient
 
-from app.adapter.db import SQLALchemyAdapter
-from app.port.db import DbAdapter
+from app.adapter.out.db import MongoDbAdapter
+from app.port.adapter.db import DbAdapter
 
 # Create local file db
 SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
@@ -19,10 +19,7 @@ def db_adapter() -> DbAdapter:
     """
     Return db adapter without DB session
     """
-    return SQLALchemyAdapter(
-        SQLALCHEMY_DATABASE_URL,
-        engine_args={"connect_args": {"check_same_thread": False}},
-    )
+    return MongoDbAdapter()
 
 
 @pytest.fixture
@@ -39,8 +36,8 @@ def db(db_adapter: DbAdapter) -> Generator[DbAdapter, None, None]:
 
 @pytest.fixture
 def client(db):
-    from app.adapter.fastapi import app
-    from app.adapter.fastapi.dependencies import get_db
+    from app.adapter.into.fastapi import app
+    from app.adapter.into.fastapi.dependencies import get_db
 
     def get_db_override():
         yield db

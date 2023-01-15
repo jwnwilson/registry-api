@@ -1,7 +1,5 @@
 import pytest
 from fastapi.testclient import TestClient
-from hex_lib.port.db import DbAdapter
-from hex_lib.port.user import UserData
 
 
 @pytest.fixture
