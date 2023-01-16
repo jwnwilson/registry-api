@@ -1,15 +1,14 @@
 
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
-from pydantic import BaseModel
+from typing import List, Optional, Type, TypeVar
+from pydantic import BaseModel, ValidationError
 import logging
 from pymongo.errors import DuplicateKeyError
 
 from app.port.adapter.db.repository import Repository, ListParams
 from app.port.domain.user import UserData
 from ..exceptions import DuplicateRecord, RecordNotFound
-if TYPE_CHECKING:
-    from .adapter import MongoDbAdapter
+from .adapter import MongoDbAdapter
 
 ModelType = TypeVar("ModelType", bound=BaseModel)
 ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
@@ -36,7 +35,15 @@ class MongoRepository(Repository):
         data = collection.find(filters)
         if params.limit:
             data = data.limit(params.limit)
-        list_data: List[dict] = [x for x in data]
+        list_data: List[dict] = [self.model_dto(**x) for x in data]
+        entities = []
+
+        for entity in data:
+            try:
+                entities.append(self.model_dto(**entity))
+            except ValidationError as err:
+                uuid = entity.get("uuid")
+                logger.warn(f"Invalid record uuid: '{uuid}', error: {err}\n skipping...")
 
         return list_data
 
@@ -45,7 +52,7 @@ class MongoRepository(Repository):
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
-        return record
+        return self.model_dto(**record)
 
     def create(self, table: str, record_data: dict) -> model_dto:
         collection = self.db.client[self.db][table]
@@ -53,7 +60,7 @@ class MongoRepository(Repository):
         try:
             collection.insert_one(mongo_data)
             record: dict = self.read(table, record_id=record_data["uuid"])
-            return record
+            return self.model_dto(**record)
         except DuplicateKeyError:
             uuid = record_data.get("uuid")
             error = f"Duplicate record uuid: '{uuid}'"
@@ -75,4 +82,4 @@ class MongoRepository(Repository):
         updated_record: dict = collection.replace_one(
             query, record, upsert=True
         ).raw_result
-        return updated_record
+        return self.model_dto(**updated_record)

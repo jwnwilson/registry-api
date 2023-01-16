@@ -7,7 +7,8 @@ from jsonschema import validate  # type: ignore
 from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
 from pydantic import ValidationError
 
-from app.port.adapter.db import DbAdapter, ListParams
+from app.port.adapter.db import DbAdapter, Repositories
+from app.port.adapter.db.repository import ListParams
 from app.port.domain.user import UserData
 from app.port.domain.entity import CreateEntityDTO, EntityDTO, QueryParam, UpdateEntityDTO
 from app.port.domain.entity_type import EntityTypeDTO

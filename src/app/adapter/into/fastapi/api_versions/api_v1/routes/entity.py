@@ -4,7 +4,7 @@ from typing import List
 
 from fastapi import Depends, HTTPException, UploadFile
 
-from app.adapter.into.fastapi.dependencies import get_current_user, get_db
+from app.adapter.into.fastapi.dependencies import get_current_user, get_repo, get_db
 from app.domain import entity
 from app.port.domain.entity import (
     CreateEntityDTO,
@@ -17,7 +17,7 @@ from ....crud import CrudRouter
 logger = logging.getLogger(__name__)
 
 router_v1 = CrudRouter(
-    db_dependency=get_db,
+    repo_dependency=get_repo,
     respository="entity_type",
     methods=["CREATE", "READ", "UPDATE", "DELETE"],
     response_schema=EntityDTO,

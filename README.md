@@ -25,8 +25,9 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Refactor db adpater to use repositories
 - Use crud framework to reduce code
+    - Add decorators to default logic
+    - Override defaults with calls to domain logic 
 - Add tests
 - The TYPE of relationship to link creation / edit
     - e.g. blocker, caused by, owns

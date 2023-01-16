@@ -13,50 +13,43 @@ from app.port.domain.entity_type import (
     UpdateEntityTypeDTO,
 )
 
-TABLE = "entityType"
+# TABLE = "entityType"
 
-logger = logging.getLogger(__name__)
-
-
-def list_entity_type(
-    query_param: ListParams, db_adapter: DbAdapter
-) -> List[EntityTypeDTO]:
-    params = ListParams(limit=query_param.limit, filters=query_param.filters)
-    data = db_adapter.list(TABLE, params)
-    entity_types = []
-    for entity in data:
-        try:
-            entity_types.append(EntityTypeDTO(**entity))
-        except ValidationError as err:
-            uuid = entity.get("uuid")
-            logger.warn(f"Invalid record uuid: '{uuid}', error: {err}\n skipping...")
-
-    return entity_types
+# logger = logging.getLogger(__name__)
 
 
-def read(uuid: str, db_adapter: DbAdapter) -> EntityTypeDTO:
-    data = db_adapter.read(TABLE, uuid)
-    return EntityTypeDTO(**data)
+# def list_entity_type(
+#     query_param: ListParams, db_adapter: DbAdapter
+# ) -> List[EntityTypeDTO]:
+#     params = ListParams(limit=query_param.limit, filters=query_param.filters)
+#     entity_types = db_adapter.list(TABLE, params)
+    
+#     return entity_types
 
 
-def update(
-    uuid: str, entity_data: UpdateEntityTypeDTO, db_adapter: DbAdapter
-) -> EntityTypeDTO:
-    update_data = entity_data.dict()
-    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
-    data = db_adapter.read(TABLE, uuid)
-    return EntityTypeDTO(**data)
+# def read(uuid: str, db_adapter: DbAdapter) -> EntityTypeDTO:
+#     data = db_adapter.read(TABLE, uuid)
+#     return EntityTypeDTO(**data)
 
 
-def delete(uuid: str, db_adapter: DbAdapter) -> None:
-    db_adapter.delete(table=TABLE, record_id=uuid)
-    return
+# def update(
+#     uuid: str, entity_data: UpdateEntityTypeDTO, db_adapter: DbAdapter
+# ) -> EntityTypeDTO:
+#     update_data = entity_data.dict()
+#     _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=update_data)
+#     data = db_adapter.read(TABLE, uuid)
+#     return EntityTypeDTO(**data)
 
 
-def create(entity_data: CreateEntityTypeDTO, db_adapter: DbAdapter) -> EntityTypeDTO:
-    create_data = entity_data.dict()
-    entity_uuid = str(uuid.uuid4())
-    create_data["uuid"] = entity_uuid
-    _id = db_adapter.create(TABLE, record_data=create_data)
-    data = db_adapter.read(TABLE, entity_uuid)
-    return EntityTypeDTO(**data)
+# def delete(uuid: str, db_adapter: DbAdapter) -> None:
+#     db_adapter.delete(table=TABLE, record_id=uuid)
+#     return
+
+
+# def create(entity_data: CreateEntityTypeDTO, db_adapter: DbAdapter) -> EntityTypeDTO:
+#     create_data = entity_data.dict()
+#     entity_uuid = str(uuid.uuid4())
+#     create_data["uuid"] = entity_uuid
+#     _id = db_adapter.create(TABLE, record_data=create_data)
+#     data = db_adapter.read(TABLE, entity_uuid)
+#     return EntityTypeDTO(**data)

@@ -16,8 +16,4 @@ api_router_v1.include_router(
     tags=["Entity Type"],
     prefix="/entity-type",
 )
-# api_router_v1.include_router(
-#     property_router,
-#     tags=["Property"],
-#     prefix="/property",
-# )
+
