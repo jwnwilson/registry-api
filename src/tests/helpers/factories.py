@@ -1,7 +1,7 @@
 import factory
 import pytest
 
-from app.adapter.db import model
+from app.adapter.out.db.sql import model
 
 
 @pytest.fixture

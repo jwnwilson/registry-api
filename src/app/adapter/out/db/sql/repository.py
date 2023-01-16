@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Type, TypeVar
+from typing import Any, Optional, Type
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -10,17 +10,15 @@ from app.port.adapter.db.repository import Repository
 
 from .exception import RecordNotFound
 from .model.base import BaseSQLModel
+from .adapter import SQLALchemyAdapter
 
-if TYPE_CHECKING:
-    from .adapter import SQLALchemyAdapter
-
-ModelType = TypeVar("ModelType", bound=BaseSQLModel)
-ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
+ModelType = Type[BaseSQLModel]
+ModelDTOType = Type[BaseModel]
 
 
 class SQLRepository(Repository):
-    model: Type[ModelType]
-    model_dto: Type[ModelDTOType]
+    model: ModelType = BaseSQLModel
+    model_dto: ModelDTOType = BaseModel
 
     def __init__(
         self,

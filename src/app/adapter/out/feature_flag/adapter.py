@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.port.feature_flag.adapter import FeatureFlagAdapter
+from app.port.adapter.feature_flag.adapter import FeatureFlagAdapter
 
 FLAGS: Dict[str, bool] = {}
 

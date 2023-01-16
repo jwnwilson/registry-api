@@ -1,1 +1,1 @@
-from .adapter import SQLALchemyAdapter
+from .adapter import SQLALchemyAdapter, SessionNotInitialised

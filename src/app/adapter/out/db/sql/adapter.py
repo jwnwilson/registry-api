@@ -7,9 +7,6 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.port.adapter.db import DbAdapaterException, DbAdapter
 
-from .model import *
-from .model.base import Base
-
 logger = logging.getLogger(__name__)
 
 
@@ -46,6 +43,7 @@ class SQLALchemyAdapter(DbAdapter):
         return self._session
 
     def init_db(self):
+        from .model.base import Base
         logger.info("Creating database tables from models")
         # Note: This can be sped up, clearing the tables is faster than dropping
         Base.metadata.drop_all(bind=self.engine)

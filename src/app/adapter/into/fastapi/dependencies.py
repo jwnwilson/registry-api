@@ -4,8 +4,8 @@ from fastapi import Depends
 from fastapi.security import HTTPBearer
 from starlette.requests import Request
 
-from ...out.db.mongo import MongoDbAdapter
-from app.port.adapter.db import DbAdapter
+from ...out.db.mongo import MongoDbAdapter, MongoRepositories
+from app.port.adapter.db import DbAdapter, Repositories
 from app.port.domain.user import UserData
 
 ENVIRONMENT = os.environ["ENVIRONMENT"]
@@ -24,6 +24,13 @@ def get_db(user_data: UserData = Depends(get_current_user)) -> DbAdapter:
     db = MongoDbAdapter(config={}, user=user_data)
     with db.transaction():
         yield db
+
+
+def get_repo(user_data: UserData = Depends(get_current_user)) -> Repositories:
+    # Setup a DB transaction for the length of- the request
+    db = MongoDbAdapter(config={}, user=user_data)
+    with db.transaction():
+        yield MongoRepositories(db)
 
 
 # def get_db() -> Generator[DbAdapter, None, None]:

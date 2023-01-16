@@ -1,12 +1,11 @@
-from __future__ import annotations
 
+from __future__ import annotations
 from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
 from pydantic import BaseModel
 import logging
 from pymongo.errors import DuplicateKeyError
 
-from app.port.adapter.db import ListParams
-from app.port.adapter.db.repository import Repository
+from app.port.adapter.db.repository import Repository, ListParams
 from app.port.domain.user import UserData
 from ..exceptions import DuplicateRecord, RecordNotFound
 if TYPE_CHECKING:

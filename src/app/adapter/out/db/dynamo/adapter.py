@@ -7,7 +7,8 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 from pydantic import BaseModel
 
-from app.port.adapter.db import DbAdapter, ListParams
+from app.port.adapter.db import DbAdapter
+from app.port.adapter.db.repository import ListParams
 from app.port.domain.user import UserData
 from ..exceptions import RecordNotFound
 

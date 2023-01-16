@@ -38,10 +38,10 @@ reset_db: stop
 test:
 	${DOCKER_COMMAND} run ${API_NAME} bash -c "pytest src"
 
-lint:
+format:
 	${DOCKER_COMMAND} run ${API_NAME} bash -c "scripts/lint.sh"
 
-static:
+check:
 	${DOCKER_COMMAND} run ${API_NAME} bash -c "scripts/lint.sh --check"
 
 # Requires "make init_pipeline apply_pipeline" to be run in infra/ first

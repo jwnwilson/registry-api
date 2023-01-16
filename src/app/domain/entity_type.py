@@ -4,7 +4,8 @@ from typing import List
 
 from pydantic import ValidationError
 
-from app.port.adapter.db import DbAdapter, ListParams
+from app.port.adapter.db import DbAdapter
+from app.port.adapter.db.repository import ListParams
 from app.port.domain.user import UserData
 from app.port.domain.entity_type import (
     CreateEntityTypeDTO,
