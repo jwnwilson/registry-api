@@ -1,6 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from app.port.adapter.db import DbAdapter, Repositories
+
 
 @pytest.fixture
 def client():
@@ -48,10 +50,10 @@ def db(test_user):
 
 
 @pytest.fixture
-def test_data(db, test_user):
-    db.client[db.db]["linkType"].delete_many({})
-    db.client[db.db]["entityType"].delete_many({})
-    db.client[db.db]["entity"].delete_many({})
+def test_data(db: DbAdapter, repos: Repositories, test_user):
+    db.db["linkType"].delete_many({})
+    db.db["entityType"].delete_many({})
+    db.db["entity"].delete_many({})
 
     data = {
         "linkType_1": {
@@ -169,14 +171,14 @@ def test_data(db, test_user):
         },
     }
 
-    db.create("linkType", data["linkType_1"])
-    db.create("linkType", data["linkType_2"])
-    db.create("linkType", data["linkType_3"])
-    db.create("entityType", data["productEntityType"])
-    db.create("entityType", data["userEntityType"])
-    db.create("entityType", data["orgEntityType"])
-    db.create("entity", data["entity_1"])
-    db.create("entity", data["entity_2"])
-    db.create("entity", data["organisation_1"])
+    repos.link_type.create(data["linkType_1"])
+    repos.link_type.create(data["linkType_2"])
+    repos.link_type.create(data["linkType_3"])
+    repos.entity_type.create(data["productEntityType"])
+    repos.entity_type.create(data["userEntityType"])
+    repos.entity_type.create(data["orgEntityType"])
+    repos.entity.create(data["entity_1"])
+    repos.entity.create(data["entity_2"])
+    repos.entity.create(data["organisation_1"])
 
     return data

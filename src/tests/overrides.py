@@ -14,7 +14,7 @@ def get_test_user():
 
 def get_test_db_adapater(user_data: UserData):
     # connect to test db
-    return MongoDbAdapter(config={"db_name": "test_db"}, user=user_data)
+    return MongoDbAdapter(config={"db_name": "test_db"})
 
 
 def override_get_db(

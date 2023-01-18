@@ -1,7 +1,7 @@
 from app.port.adapter.db import Repositories
 from .adapter import MongoDbAdapter
 from .repository import MongoRepository
-from .model import EntityRepository, EntityRepository, LinkTypeRepository
+from .model import EntityRepository, EntityTypeRepository, LinkTypeRepository
 
 
 class MongoRepositories(Repositories):
@@ -10,7 +10,7 @@ class MongoRepositories(Repositories):
     
     @property
     def entity_type(self) -> MongoRepository:
-        return EntityRepository(self.db)
+        return EntityTypeRepository(self.db)
     
     @property
     def entity(self) -> MongoRepository:

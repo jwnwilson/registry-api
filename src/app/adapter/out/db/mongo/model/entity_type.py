@@ -4,5 +4,5 @@ from ..repository import MongoRepository
 
 class EntityTypeRepository(MongoRepository):
     model_dto = EntityTypeDTO
-    table = "entity-type"
+    table = "entityType"
 

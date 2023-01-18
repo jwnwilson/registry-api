@@ -104,7 +104,6 @@ class CrudRouter:
         def read_multiple_records(
             repos: Repositories= Depends(self.repo_dependency),
         ) -> PaginatedData:  # type: ignore
-            breakpoint()
             repositry: Repository = getattr(repos, self.repository)
             return repositry.read_multi()
 

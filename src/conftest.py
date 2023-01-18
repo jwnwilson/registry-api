@@ -7,8 +7,8 @@ os.environ["SQLALCHEMY_SILENCE_UBER_WARNING"] = "1"
 import pytest
 from fastapi.testclient import TestClient
 
-from app.adapter.out.db import MongoDbAdapter
-from app.port.adapter.db import DbAdapter
+from app.adapter.out.db import MongoDbAdapter, MongoRepositories
+from app.port.adapter.db import DbAdapter, Repositories
 
 # Create local file db
 SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
@@ -19,7 +19,9 @@ def db_adapter() -> DbAdapter:
     """
     Return db adapter without DB session
     """
-    return MongoDbAdapter()
+    return MongoDbAdapter(
+        config={"db_name": "test_db"}
+    )
 
 
 @pytest.fixture
@@ -31,7 +33,19 @@ def db(db_adapter: DbAdapter) -> Generator[DbAdapter, None, None]:
     db_adapter.init_db()
     # Create DB session
     with db_adapter.transaction() as session:
-        yield db_adapter
+        yield MongoRepositories(db_adapter)
+
+
+@pytest.fixture
+def repos(db_adapter: DbAdapter) -> Generator[Repositories, None, None]:
+    """
+    Return db adapter with initialised DB & DB session.
+    """
+    # Create tables
+    db_adapter.init_db()
+    # Create DB session
+    with db_adapter.transaction() as session:
+        yield MongoRepositories(db_adapter)
 
 
 @pytest.fixture

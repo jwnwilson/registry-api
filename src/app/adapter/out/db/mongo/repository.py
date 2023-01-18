@@ -26,8 +26,8 @@ class MongoRepository(Repository):
     ):
         self.db: MongoDbAdapter = db
 
-    def list(self, table: str, params: ListParams) -> List[model_dto]:
-        collection = self.db.client[self.db][table]
+    def list(self, params: ListParams) -> List[model_dto]:
+        collection = self.db.db[self.table]
         filters = {}
         if params.filters:
             filters.update(params.filters)
@@ -47,32 +47,31 @@ class MongoRepository(Repository):
 
         return list_data
 
-    def read(self, table: str, record_id: str) -> model_dto:
-        collection = self.db.client[self.db][table]
+    def read(self, record_id: str) -> model_dto:
+        collection = self.db.db[self.table]
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
         return self.model_dto(**record)
 
-    def create(self, table: str, record_data: dict) -> model_dto:
-        collection = self.db.client[self.db][table]
+    def create(self, record_data: dict) -> model_dto:
+        collection = self.db.db[self.table]
         mongo_data = {**record_data, **{"_id": record_data["uuid"]}}
         try:
             collection.insert_one(mongo_data)
-            record: dict = self.read(table, record_id=record_data["uuid"])
-            return self.model_dto(**record)
+            return self.read(record_id=record_data["uuid"])
         except DuplicateKeyError:
             uuid = record_data.get("uuid")
             error = f"Duplicate record uuid: '{uuid}'"
             logger.info(error)
             raise DuplicateRecord(error)
 
-    def delete(self, table: str, record_id: str):
-        collection = self.db.client[self.db][table]
+    def delete(self, record_id: str):
+        collection = self.db.db[self.table]
         collection.delete_one({"uuid": record_id})
 
-    def update(self, table: str, record_id: str, record_data: dict) -> model_dto:
-        collection = self.db.client[self.db][table]
+    def update(self, record_id: str, record_data: dict) -> model_dto:
+        collection = self.db.db[self.table]
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
