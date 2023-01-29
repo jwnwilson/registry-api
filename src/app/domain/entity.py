@@ -97,13 +97,18 @@ def get_entities_by_links(uuids: List[str], repos: Repositories) -> List[EntityD
 
 def _edit_linked_entity_backref(
     entity: EntityDTO, linked_entity: EntityDTO, link_types: List[LinkTypeDTO]
-):
+) -> bool:
     # Edit links
     link_type = entity.links[linked_entity.uuid].link_type
     back_link_type = [x for x in filter(lambda x: x.name == link_type, link_types)][0]
-    linked_entity.links[entity.uuid] = LinkDTO(
+    new_link = LinkDTO(
         entity_type=entity.entity_type, link_type=back_link_type.name
     )
+    if linked_entity.links[entity.uuid] != new_link:
+        linked_entity.links[entity.uuid] = new_link
+        return True
+    else:
+        return False
 
 
 def create_back_links(entity: EntityDTO, repos: Repositories):
@@ -118,7 +123,6 @@ def create_back_links(entity: EntityDTO, repos: Repositories):
     # Create new links
     for linked_entity in linked_entities:
         _edit_linked_entity_backref(entity, linked_entity, link_types)
-        # Will probably need to think about how to handle circular logic here
         repos.entity.update(linked_entity.uuid, linked_entity)
 
 
@@ -143,14 +147,16 @@ def update_back_links(
     link_types: List[LinkTypeDTO] = repos.link_type.read_multi()
 
     for linked_entity in linked_entities:
+        modified = False
         if linked_entity.uuid in removed_links:
             # Delete remove links
             del linked_entity.links[current_entity.uuid]
+            modified = True
         else:
             # Edit links
-            _edit_linked_entity_backref(updated_entity, linked_entity, link_types)
-        # Will probably need to think about how to handle circular logic here
-        repos.entity.update(linked_entity.uuid, linked_entity)
+            modified = _edit_linked_entity_backref(updated_entity, linked_entity, link_types)
+        if modified:
+            repos.entity.update(linked_entity.uuid, linked_entity)
 
 
 def validate_fields(
