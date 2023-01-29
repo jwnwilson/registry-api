@@ -95,7 +95,7 @@ def get_entities_by_links(uuids: List[str], repos: Repositories) -> List[EntityD
     return entities
 
 
-def _edit_linked_entity_backref(
+def update_entity_link_data(
     entity: EntityDTO, linked_entity: EntityDTO, link_types: List[LinkTypeDTO]
 ) -> bool:
     # Edit links
@@ -111,7 +111,7 @@ def _edit_linked_entity_backref(
         return False
 
 
-def create_back_links(entity: EntityDTO, repos: Repositories):
+def create_links(entity: EntityDTO, repos: Repositories):
     # Create back links for entities this is linked to
 
     # Get related entities
@@ -122,11 +122,11 @@ def create_back_links(entity: EntityDTO, repos: Repositories):
 
     # Create new links
     for linked_entity in linked_entities:
-        _edit_linked_entity_backref(entity, linked_entity, link_types)
+        update_entity_link_data(entity, linked_entity, link_types)
         repos.entity.update(linked_entity.uuid, linked_entity)
 
 
-def update_back_links(
+def update_entity_links(
     current_entity: EntityDTO, updated_entity: EntityDTO, repos: Repositories
 ):
     # Update back links for entities this is linked to
@@ -154,7 +154,7 @@ def update_back_links(
             modified = True
         else:
             # Edit links
-            modified = _edit_linked_entity_backref(updated_entity, linked_entity, link_types)
+            modified = update_entity_link_data(updated_entity, linked_entity, link_types)
         if modified:
             repos.entity.update(linked_entity.uuid, linked_entity)
 

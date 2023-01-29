@@ -1,7 +1,7 @@
 import uuid
 from typing import List
 
-from app.domain.entity import EntityDTO, validate_fields, update_back_links
+from app.domain.entity import EntityDTO, validate_fields, update_entity_links, create_links
 from ..repository import MongoRepository
 
 
@@ -16,6 +16,7 @@ class EntityRepository(MongoRepository):
         )
         create_data = record_data.dict()
         create_data["uuid"] = str(uuid.uuid4())
+        create_links(record_data, self.repos)
 
         return super().create(record_data)
 
@@ -28,5 +29,5 @@ class EntityRepository(MongoRepository):
         # Update current entity with new data
         updated_entity = EntityDTO(**{**current_entity.dict(), **record_data.dict()})
 
-        update_back_links(current_entity, updated_entity, self.repos)
+        update_entity_links(current_entity, updated_entity, self.repos)
         return super().update(record_id, updated_entity)
