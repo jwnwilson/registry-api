@@ -5,7 +5,7 @@ from typing import List
 import boto3
 
 from app.port.adapter.storage import StorageAdapter, StorageData, UploadUrlData
-from app.port.domain.user import UserData
+from app.domain.user import UserData
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "")
 AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION", "eu-west-1")

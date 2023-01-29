@@ -1,25 +1,77 @@
 import json
 import logging
 import uuid
-from typing import List, Union
+from typing import List, Union, Any, Dict, Optional
 
 from jsonschema import validate  # type: ignore
 from jsonschema.exceptions import ValidationError as JsonValidationError  # type: ignore
-from pydantic import ValidationError
+from pydantic import ValidationError, BaseModel
 
 from app.port.adapter.db import DbAdapter, Repositories
-from app.port.adapter.db.repository import ListParams
-from app.port.domain.user import UserData
-from app.port.domain.entity import CreateEntityDTO, EntityDTO, QueryParam, UpdateEntityDTO
-from app.port.domain.entity_type import EntityTypeDTO
-from app.port.domain.file import FileDTO
-from app.port.domain.link_type import LinkDTO, LinkTypeDTO
-
+from .entity_type import EntityTypeDTO
+from .file import FileDTO
+from .link_type import LinkDTO, LinkTypeDTO, LinkFields
 from .exceptions import EntityValidationError
 
 TABLE = "entity"
 
 logger = logging.getLogger(__name__)
+
+
+Fields = Dict[str, Any]
+
+
+class EntityDTO(BaseModel):
+    name: str
+    description: str
+    entity_type: str
+    uuid: str
+    fields: Fields
+    links: LinkFields
+    metadata: Dict
+
+
+class CreateEntityPostDTO(BaseModel):
+    name: str
+    description: Optional[str] = ""
+    fields: Optional[Fields] = {}
+    links: Optional[LinkFields] = {}
+    metadata: Optional[Dict] = {}
+
+
+class UpdateEntityPatchDTO(BaseModel):
+    name: str
+    description: str
+    fields: Fields
+    links: LinkFields
+    metadata: Dict
+
+
+class CreateEntityDTO(BaseModel):
+    name: str
+    description: Optional[str] = ""
+    entity_type: str
+    fields: Optional[Fields]
+    links: Optional[LinkFields] = {}
+    metadata: Optional[Dict] = {}
+
+
+class UpdateEntityDTO(BaseModel):
+    name: str
+    description: str
+    entity_type: str
+    fields: Fields
+    links: LinkFields
+    metadata: Dict
+
+
+class QueryParam(BaseModel):
+    name: Optional[str]
+    entity_type: Optional[str]
+    uuid: Optional[str]
+    limit: Optional[int]
+    filters: Optional[dict]
+
 
 
 def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
@@ -37,11 +89,9 @@ def parse_json(entity_type: str, parse_json: FileDTO, db_adapter: DbAdapter):
     return entities
 
 
-def get_entities_by_links(uuids: List[str], db_adapter: DbAdapter) -> List[EntityDTO]:
-    db_params = ListParams(filters={"uuid": {"$in": uuids}})
-    entities: List[EntityDTO] = [
-        EntityDTO(**data) for data in db_adapter.list(TABLE, db_params)
-    ]
+def get_entities_by_links(uuids: List[str], repos: Repositories) -> List[EntityDTO]:
+    db_params = dict(filters={"uuid": {"$in": uuids}})
+    entities: List[EntityDTO] = repos.entity.read_multi(db_params)
     return entities
 
 
@@ -56,44 +106,41 @@ def _edit_linked_entity_backref(
     )
 
 
-def create_back_links(entity: EntityDTO, db_adapter: DbAdapter):
+def create_back_links(entity: EntityDTO, repos: Repositories):
     # Create back links for entities this is linked to
 
     # Get related entities
     linked_entities = get_entities_by_links([link for link in entity.links], db_adapter)
 
     # Get link types
-    link_types: List[LinkTypeDTO] = [
-        LinkTypeDTO(**data) for data in db_adapter.list("LinkType", ListParams())
-    ]
+    link_types: List[LinkTypeDTO] = repos.link_type.read_multi()
 
     # Create new links
     for linked_entity in linked_entities:
         _edit_linked_entity_backref(entity, linked_entity, link_types)
-        db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
+        # Will probably need to think about how to handle circular logic here
+        repos.entity.update(linked_entity.uuid, linked_entity)
 
 
 def update_back_links(
-    current_entity: EntityDTO, new_entity: EntityDTO, db_adapter: DbAdapter
+    current_entity: EntityDTO, updated_entity: EntityDTO, repos: Repositories
 ):
     # Update back links for entities this is linked to
 
     # Get link diff
     removed_links = list(
         filter(
-            lambda uuid: uuid not in new_entity.links.keys(),
+            lambda uuid: uuid not in updated_entity.links.keys(),
             current_entity.links.keys(),
         )
     )
 
     # Get related entities
     linked_entities: List[EntityDTO] = get_entities_by_links(
-        [link for link in (list(new_entity.links.keys()) + removed_links)], db_adapter
+        [link for link in (list(updated_entity.links.keys()) + removed_links)], repos
     )
     # Get link types
-    link_types: List[LinkTypeDTO] = [
-        LinkTypeDTO(**data) for data in db_adapter.list("linkType", ListParams())
-    ]
+    link_types: List[LinkTypeDTO] = repos.link_type.read_multi()
 
     for linked_entity in linked_entities:
         if linked_entity.uuid in removed_links:
@@ -101,23 +148,23 @@ def update_back_links(
             del linked_entity.links[current_entity.uuid]
         else:
             # Edit links
-            _edit_linked_entity_backref(new_entity, linked_entity, link_types)
-        db_adapter.update(TABLE, linked_entity.uuid, linked_entity.dict())
+            _edit_linked_entity_backref(updated_entity, linked_entity, link_types)
+        # Will probably need to think about how to handle circular logic here
+        repos.entity.update(linked_entity.uuid, linked_entity)
 
 
-def _validate_fields(
+def validate_fields(
     entity_data: Union[List[CreateEntityDTO], List[UpdateEntityDTO], List[EntityDTO]],
-    db_adapter: DbAdapter,
+    repos: Repositories,
 ):
     # Get entity type for entity
     entity_type_name = entity_data[0].entity_type
-    param = ListParams(filters={"name": entity_type_name})
-    entity_types = list_entity_type(param, db_adapter)
+    filters = {"name": entity_type_name}
+    entity_types = repos.entity_type.read_multi(filters=filters)
     entity_types_len = len(entity_types)
 
     try:
-        assertion_error_msg = f"Unknown Entity Type: {entity_type_name}"
-        assert entity_types_len == 1, assertion_error_msg
+        assert entity_types_len == 1, f"Unknown Entity Type: {entity_type_name}"
     except AssertionError as err:
         raise EntityValidationError(str(err))
 
@@ -146,78 +193,12 @@ def _validate_fields(
         raise EntityValidationError(str(err))
 
 
-def list_entities(query_param: QueryParam, db_adapter: DbAdapter) -> List[EntityDTO]:
-    filters = query_param.filters or {}
-    filters.update({"entity_type": query_param.entity_type})
-    params = ListParams(limit=query_param.limit, filters=filters)
-    data = db_adapter.list(TABLE, params)
-    entity_types = []
-    for entity in data:
-        try:
-            entity_types.append(EntityDTO(**entity))
-        except ValidationError:
-            uuid = entity.get("uuid")
-            logger.warn(f"Invalid record uuid: '{uuid}', skipping...")
-
-    return entity_types
-
-
-def _create_entity(
-    entity_data: Union[CreateEntityDTO, EntityDTO],
-    db_adapter: DbAdapter,
-) -> EntityDTO:
-    _validate_fields([entity_data], db_adapter)  # type: ignore
-    create_data = entity_data.dict()
-    entity_uuid = str(uuid.uuid4())
-    create_data["uuid"] = entity_uuid
-
-    create_back_links(entity_data, db_adapter)
-    entity_data = db_adapter.create(TABLE, record_data=create_data)
-    entity = EntityDTO(**create_data)
-
-    return entity
-
-
-def create(entity_data: CreateEntityDTO, db_adapter: DbAdapter) -> EntityDTO:
-    entity_dto = _create_entity(entity_data, db_adapter)
-    return entity_dto
-
-
-def create_entities(
-    entity_data: Union[List[CreateEntityDTO], List[EntityDTO]],
-    db_adapter: DbAdapter,
-) -> List[EntityDTO]:
-    entity_dtos = []
-
-    for entity in entity_data:
-        entity_dtos.append(_create_entity(entity, db_adapter))
-    return entity_dtos
-
-
 def create_entities_from_file(
     entity_type: str,
     fileDTO: FileDTO,
-    db_adapter: DbAdapter,
+    repositories: Repositories,
 ) -> List[EntityDTO]:
-
-    entities_dto: List[EntityDTO] = parse_json(entity_type, fileDTO, db_adapter)
-    entities: List[EntityDTO] = create_entities(entities_dto, db_adapter=db_adapter)
+    entities_dto: List[EntityDTO] = parse_json(entity_type, fileDTO, repositories)
+    entities: List[EntityDTO] = repositories.entity.create_multi(entities_dto)
     return entities
 
-
-def update(
-    uuid: str,
-    entity_data: UpdateEntityDTO,
-    db_adapter: DbAdapter,
-) -> EntityDTO:
-    _validate_fields([entity_data], db_adapter)
-    current_entity: EntityDTO = EntityDTO(**db_adapter.read(TABLE, uuid))
-    new_entity = EntityDTO(**{**current_entity.dict(), **entity_data.dict()})
-
-    update_back_links(current_entity, new_entity, db_adapter)
-
-    _id = db_adapter.update(table=TABLE, record_id=uuid, record_data=new_entity.dict())
-    data = db_adapter.read(TABLE, uuid)
-    entity = EntityDTO(**data)
-
-    return entity

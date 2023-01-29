@@ -1,7 +1,7 @@
 import logging
 
 from app.adapter.into.fastapi.dependencies import get_repo
-from app.port.domain.entity_type import (
+from app.domain.entity_type import (
     CreateEntityTypeDTO,
     EntityTypeDTO,
     UpdateEntityTypeDTO,

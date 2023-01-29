@@ -10,12 +10,12 @@ class MongoRepositories(Repositories):
     
     @property
     def entity_type(self) -> MongoRepository:
-        return EntityTypeRepository(self.db)
+        return EntityTypeRepository(self.db, self)
     
     @property
     def entity(self) -> MongoRepository:
-        return EntityRepository(self.db)
+        return EntityRepository(self.db, self)
     
     @property
     def link_type(self) -> MongoRepository:
-        return LinkTypeRepository(self.db)
+        return LinkTypeRepository(self.db, self)

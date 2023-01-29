@@ -4,7 +4,7 @@ from starlette.requests import Request
 from app.adapter.into.fastapi.dependencies import get_current_user
 from app.adapter.out.db import MongoDbAdapter
 from app.port.adapter.db import DbAdapter
-from app.port.domain.user import UserData
+from app.domain.user import UserData
 
 
 def get_test_user():

@@ -30,7 +30,7 @@ class CrudRouter(APIRouter):
 
     @router_v1.get("/")
     def override_read_multi():
-        return "test"
+        return "example"
     """
 
     response_schema: Type[BaseModel]
@@ -142,7 +142,7 @@ class CrudRouter(APIRouter):
             page_number: int = 1,
         ) -> PaginatedData:  # type: ignore
             repositry: Repository = getattr(repos, self.repository)
-            return repositry.read_multi(page_size=page_size, page_number=page_number)
+            return repositry.read_multi(filters={}, page_size=page_size, page_number=page_number)
 
         return read_multiple_records
 

@@ -6,7 +6,6 @@ from typing import Dict, List, Optional
 from pymongo import MongoClient
 
 from app.port.adapter.db import DbAdapter
-from app.port.domain.user import UserData
 
 logger = logging.getLogger(__name__)
 

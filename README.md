@@ -25,15 +25,15 @@ POST /entity/<type>/upload
 
 ## TODO
 
-- Use crud framework to reduce code
-    - Add decorators to default logic
-    - Override defaults with calls to domain logic 
+- Call entity domain logic from entity repository
+- Add entity-type filter to entity endpoints
 - Add tests
 - The TYPE of relationship to link creation / edit
     - e.g. blocker, caused by, owns
     - default to "related", "related_to" or "related_from"
     - Update UI to send this data
 - Setup back linking uuid in linked entity (update both entities) (use web framework after request callback logic)
+- Update dynamodb repository make repositories configurable
 - Deploy project (lambda + dynamodb)
 - Filter by links (test filtering by org)
 - Filter by fields

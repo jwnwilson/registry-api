@@ -1,7 +1,7 @@
 import logging
 
 from app.adapter.into.fastapi.dependencies import get_repo
-from app.port.domain.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
+from app.domain.link_type import CreateLinkTypeDTO, LinkTypeDTO, UpdateLinkTypeDTO
 from ....crud import CrudRouter
 
 logger = logging.getLogger(__name__)

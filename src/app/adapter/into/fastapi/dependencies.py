@@ -6,7 +6,7 @@ from starlette.requests import Request
 
 from ...out.db.mongo import MongoDbAdapter, MongoRepositories
 from app.port.adapter.db import DbAdapter, Repositories
-from app.port.domain.user import UserData
+from app.domain.user import UserData
 
 ENVIRONMENT = os.environ["ENVIRONMENT"]
 

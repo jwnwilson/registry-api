@@ -1,4 +1,4 @@
-from app.port.domain.entity_type import EntityTypeDTO
+from app.domain.entity_type import EntityTypeDTO
 from ..repository import MongoRepository
 
 

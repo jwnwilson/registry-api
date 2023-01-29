@@ -8,8 +8,7 @@ from boto3.dynamodb.conditions import Attr
 from pydantic import BaseModel
 
 from app.port.adapter.db import DbAdapter
-from app.port.adapter.db.repository import ListParams
-from app.port.domain.user import UserData
+from app.domain.user import UserData
 from ..exceptions import RecordNotFound
 
 
@@ -53,7 +52,7 @@ class DynamodbAdapter(DbAdapter):
     def _get_table(self, table):
         return self.client.Table(table)
 
-    def _build_query_params(self, params: ListParams):
+    def _build_query_params(self, params: Dict):
         query_params = {}
         filters: Dict[str, Any] = {}
         if params.filters:

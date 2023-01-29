@@ -5,7 +5,7 @@ import uuid
 import boto3
 
 from app.port.adapter.task import TaskAdapter, TaskArgs, TaskData
-from app.port.domain.user import UserData
+from app.domain.user import UserData
 
 logger = logging.getLogger(__name__)
 

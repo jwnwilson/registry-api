@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
@@ -7,8 +6,8 @@ import logging
 
 from app.port.adapter.db import ListParams
 from app.port.adapter.db.repository import Repository
-from app.port.domain.user import UserData
 from ..exceptions import DuplicateRecord, RecordNotFound
+
 if TYPE_CHECKING:
     from .adapter import DynamodbAdapter
 
@@ -22,12 +21,9 @@ class DynamodbRepository(Repository):
     model: Type[ModelType]
     model_dto: Type[ModelDTOType]
 
-    def __init__(
-        self,
-        db: DynamodbAdapter
-    ):
+    def __init__(self, db: DynamodbAdapter):
         self.db: DynamodbAdapter = db
-        
+
     def read(self, table: str, record_id: str) -> dict:
         try:
             table_data: dict = self._get_table(table).get_item(

@@ -1,15 +1,16 @@
-
 from __future__ import annotations
 import uuid
-from typing import List, Optional, Type, TypeVar
+from typing import Dict, Optional, Type, TypeVar, Any, List, TYPE_CHECKING
 from pydantic import BaseModel, ValidationError
 import logging
 from pymongo.errors import DuplicateKeyError
 
-from app.port.adapter.db.repository import Repository, ListParams
-from app.port.domain.user import UserData
+from app.port.adapter.db.repository import Repository, PaginatedData
 from ..exceptions import DuplicateRecord, RecordNotFound
 from .adapter import MongoDbAdapter
+
+if TYPE_CHECKING:
+    from .repositories import Repositories
 
 ModelType = TypeVar("ModelType", bound=BaseModel)
 ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
@@ -21,32 +22,37 @@ class MongoRepository(Repository):
     model_dto: Type[ModelDTOType]
     table: str
 
-    def __init__(
-        self,
-        db: MongoDbAdapter
-    ):
+    def __init__(self, db: MongoDbAdapter, repos: Repositories):
         self.db: MongoDbAdapter = db
+        self.repos: Repositories = repos
 
-    def list(self, params: ListParams) -> List[model_dto]:
+    def get_offset(self, page_size: int, page_number: int):
+        return (page_number - 1) * page_size
+
+    def paginate(self, data: Any, page_number: int, page_size: int):
+        if page_size > 0 and page_number >= 1:
+            offset = self.get_offset(page_size, page_number)
+            data = data.skip(offset).limit(page_size)
+
+        return data
+
+    def read_multi(self, filters: Dict, page_size: int = 100, page_number: int = 1) -> PaginatedData:
         collection = self.db.db[self.table]
-        filters = {}
-        if params.filters:
-            filters.update(params.filters)
-
         data = collection.find(filters)
-        if params.limit:
-            data = data.limit(params.limit)
-        list_data: List[dict] = [self.model_dto(**x) for x in data]
+        data = self.paginate(data, page_number=page_number, page_size=page_size)
         entities = []
-
         for entity in data:
             try:
                 entities.append(self.model_dto(**entity))
             except ValidationError as err:
                 uuid = entity.get("uuid")
-                logger.warn(f"Invalid record uuid: '{uuid}', error: {err}\n skipping...")
+                logger.warn(
+                    f"Invalid record uuid: '{uuid}', error: {err}\n skipping..."
+                )
 
-        return list_data
+        return PaginatedData(
+            results=entities, total=len(entities), page_size=page_size, page_number=page_number
+        )
 
     def read(self, record_id: str) -> model_dto:
         collection = self.db.db[self.table]
@@ -66,6 +72,12 @@ class MongoRepository(Repository):
             error = f"Duplicate record uuid: '{record_id}'"
             logger.info(error)
             raise DuplicateRecord(error)
+
+    def create_multi(self, record_data: List[model_dto]) -> List[model_dto]:
+        entity_dtos = []
+        for entity in record_data:
+            entity_dtos.append(self.create(entity))
+        return entity_dtos
 
     def delete(self, record_id: str):
         collection = self.db.db[self.table]

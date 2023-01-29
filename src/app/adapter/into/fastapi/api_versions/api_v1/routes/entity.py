@@ -6,12 +6,12 @@ from fastapi import Depends, HTTPException, UploadFile
 
 from app.adapter.into.fastapi.dependencies import get_current_user, get_repo, get_db
 from app.domain import entity
-from app.port.domain.entity import (
+from app.domain.entity import (
     CreateEntityDTO,
     EntityDTO,
     UpdateEntityDTO,
 )
-from app.port.domain.file import FileDTO
+from app.domain.file import FileDTO
 from ....crud import CrudRouter
 
 logger = logging.getLogger(__name__)
