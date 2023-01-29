@@ -1,13 +1,21 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Any, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, TypeVar
 
 from pydantic import BaseModel
 
-from .adapter import DbAdapter
+if TYPE_CHECKING:
+    from .adapter import DbAdapter
 
-ModelDTOType = TypeVar("ModelDTOType", bound=BaseModel)
+ModelDTO = TypeVar("ModelDTO", bound=BaseModel)
+
+
+class PaginatedData(BaseModel):
+    results: Any
+    total: int
+    page_size: int
+    page_number: int
 
 
 class ListParams(BaseModel):
@@ -19,18 +27,18 @@ class Repository(ABC):
     def __init__(self, db: DbAdapter):
         self.db = db
 
-    def create(self, obj_in: ModelDTOType) -> ModelDTOType:
+    def create(self, obj_in: ModelDTO) -> ModelDTO:
         raise NotImplementedError
 
-    def read(self, id: Any) -> Optional[ModelDTOType]:  # type: ignore
+    def read(self, id: Any) -> Optional[ModelDTO]:  # type: ignore
         raise NotImplementedError
 
     def read_multi(
-        self, filters: Optional[ListParams] = None, page_size: int = 100, page_number: int = 1
-    ) -> Any:
+        self, filters: Any = None, page_size: int = 100, page_number: int = 1
+    ) -> PaginatedData:
         raise NotImplementedError
 
-    def update(self, id: Any, obj_in: ModelDTOType) -> ModelDTOType:
+    def update(self, id: Any, obj_in: ModelDTO) -> ModelDTO:
         raise NotImplementedError
 
     def delete(self, id: Any) -> bool:

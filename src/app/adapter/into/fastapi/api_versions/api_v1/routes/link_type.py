@@ -13,4 +13,4 @@ router_v1 = CrudRouter(
     response_schema=LinkTypeDTO,
     create_schema=CreateLinkTypeDTO,
     update_schema=UpdateLinkTypeDTO,
-).router
+)

@@ -2,7 +2,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.port.adapter.db import DbAdapter, Repositories
-
+from app.port.domain.entity_type import EntityTypeDTO
+from app.port.domain.entity import EntityDTO
+from app.port.domain.link_type import LinkTypeDTO
 
 @pytest.fixture
 def client():
@@ -57,24 +59,20 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
 
     data = {
         "linkType_1": {
-            "uuid": "d187540d-fe9e-47e4-b738-95a09661fe05",
             "name": "related",
             "back_link": "related",
         },
         "linkType_2": {
-            "uuid": "2e4127f1-1977-4ab0-989c-62fbfba66a25",
             "name": "related_to",
             "back_link": "related_from",
         },
         "linkType_3": {
-            "uuid": "47aaba9c-bf74-493a-bd42-0d6dad80c4e3",
             "name": "related_from",
             "back_link": "related_from",
         },
         "productEntityType": {
             "name": "product",
             "description": "",
-            "uuid": "e3105dbb-937e-43a3-bcc0-5f6500cb1f10",
             "fields": {
                 "product_number": {
                     "uuid": "f6d7bdd9-f426-4515-b51a-5daad906e131",
@@ -96,7 +94,6 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
         "userEntityType": {
             "name": "user",
             "description": "",
-            "uuid": "99ac59e7-74a7-4900-a482-d93441b3edd1",
             "fields": {
                 "name": {
                     "uuid": "8742424e-46de-45e4-8d98-4a4d3ddb66b5",
@@ -118,11 +115,9 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
         "orgEntityType": {
             "name": "organisation",
             "description": "",
-            "uuid": "b8e6df9f-2b75-4f96-b955-70a216d170e5",
             "fields": {
                 "name": {
                     "name": "name",
-                    "uuid": "2bb37c7d-3aa2-4d0d-ad9a-6b15149c1605",
                     "input_type": "text",
                     "data_type": "string",
                     "description": "",
@@ -136,7 +131,6 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
             "name": "test org",
             "description": "",
             "entity_type": "organisation",
-            "uuid": "444f41fb-30af-4997-a993-54ba5d4466e8",
             "fields": {"name": "Test Org"},
             "links": {
                 "2ddc873b-dbe9-4c89-944d-75b58ae33cca": {
@@ -150,7 +144,6 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
             "name": "knife",
             "description": "",
             "entity_type": "product",
-            "uuid": "2ddc873b-dbe9-4c89-944d-75b58ae33cca",
             "fields": {"product_number": "12345"},
             "links": {
                 "444f41fb-30af-4997-a993-54ba5d4466e8": {
@@ -164,21 +157,20 @@ def test_data(db: DbAdapter, repos: Repositories, test_user):
             "name": "spoon",
             "description": "",
             "entity_type": "product",
-            "uuid": "259f80d6-5f1a-4d87-9440-bbbc155db294",
             "fields": {"product_number": "54321"},
             "links": {},
             "metadata": {},
         },
     }
 
-    repos.link_type.create(data["linkType_1"])
-    repos.link_type.create(data["linkType_2"])
-    repos.link_type.create(data["linkType_3"])
-    repos.entity_type.create(data["productEntityType"])
-    repos.entity_type.create(data["userEntityType"])
-    repos.entity_type.create(data["orgEntityType"])
-    repos.entity.create(data["entity_1"])
-    repos.entity.create(data["entity_2"])
-    repos.entity.create(data["organisation_1"])
+    repos.link_type.create(LinkTypeDTO(**data["linkType_1"]))
+    repos.link_type.create(LinkTypeDTO(**data["linkType_2"]))
+    repos.link_type.create(LinkTypeDTO(**data["linkType_3"]))
+    repos.entity_type.create(EntityTypeDTO(**data["productEntityType"]))
+    repos.entity_type.create(EntityTypeDTO(**data["userEntityType"]))
+    repos.entity_type.create(EntityTypeDTO(**data["orgEntityType"]))
+    repos.entity.create(EntityDTO(**data["entity_1"]))
+    repos.entity.create(EntityDTO(**data["entity_2"]))
+    repos.entity.create(EntityDTO(**data["organisation_1"]))
 
     return data

@@ -23,10 +23,10 @@ router_v1 = CrudRouter(
     response_schema=EntityDTO,
     create_schema=CreateEntityDTO,
     update_schema=UpdateEntityDTO,
-).router
+)
 
 
-@router_v1.post("/{entity_type}/import/", tags=["Import / Export"])
+@router_v1.post("/{entity_type}/import/")
 def import_entities(
     entity_type: str,
     file: UploadFile,
@@ -50,89 +50,3 @@ def import_entities(
         raise HTTPException(400, str(err))
 
     return entities
-
-
-# router = APIRouter(
-#     prefix="/entity",
-#     dependencies=[],
-#     responses={404: {"description": "Not found"}},
-#     redirect_slashes=True,
-# )
-
-
-# @router.get("/{entity_type}/", tags=["Entity"], response_model=Page[EntityDTO])
-# def list_entity(
-#     entity_type: str,
-#     db_adapter=Depends(get_db),
-#     user=Depends(get_current_user),
-# ) -> AbstractPage[EntityDTO]:
-#     query_param: QueryParam = QueryParam(entity_type=entity_type)
-#     data: List[EntityDTO] = entity.list_entities(query_param, db_adapter=db_adapter)
-#     return paginate(data)
-
-
-# @router.get("/{entity_type}/{uuid}/", tags=["Entity"])
-# def get_entity(
-#     entity_type: str,
-#     uuid: str,
-#     db_adapter=Depends(get_db),
-#     user=Depends(get_current_user),
-# ) -> EntityDTO:
-#     data: EntityDTO = entity.read(
-#         uuid=uuid, entity_type=entity_type, db_adapter=db_adapter
-#     )
-#     return data
-
-
-# @router.post("/{entity_type}/", tags=["Entity"])
-# def create_entity(
-#     entity_type: str,
-#     entity_data: CreateEntityPostDTO,
-#     db_adapter=Depends(get_db),
-#     user=Depends(get_current_user),
-# ) -> EntityDTO:
-#     try:
-#         create_data: CreateEntityDTO = CreateEntityDTO(
-#             entity_type=entity_type, **entity_data.dict()
-#         )
-#     except EntityValidationError as err:
-#         raise HTTPException(400, str(err))
-#     try:
-#         data: EntityDTO = entity.create(entity_data=create_data, db_adapter=db_adapter)
-#     except (DuplicateRecord, EntityValidationError) as err:
-#         raise HTTPException(400, str(err))
-#     return data
-
-
-# @router.patch("/{entity_type}/{uuid}/", tags=["Entity"])
-# def update_entity(
-#     entity_type: str,
-#     uuid: str,
-#     entity_data: UpdateEntityPatchDTO,
-#     db_adapter=Depends(get_db),
-#     user=Depends(get_current_user),
-# ) -> EntityDTO:
-#     try:
-#         update_entity_data: UpdateEntityDTO = UpdateEntityDTO(
-#             entity_type=entity_type, **entity_data.dict()
-#         )
-#         data: EntityDTO = entity.update(
-#             uuid=uuid,
-#             entity_data=update_entity_data,
-#             db_adapter=db_adapter,
-#         )
-#     except (DuplicateRecord, EntityValidationError) as err:
-#         raise HTTPException(400, str(err))
-#     return data
-
-
-# @router.delete("/{entity_type}/{uuid}/", tags=["Entity"], status_code=201)
-# def delete_entity(
-#     entity_type: str,
-#     uuid: str,
-#     db_adapter=Depends(get_db),
-#     user=Depends(get_current_user),
-# ) -> None:
-#     # call create use case
-#     entity.delete(uuid=uuid, db_adapter=db_adapter)
-#     return

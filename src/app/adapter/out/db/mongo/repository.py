@@ -1,5 +1,6 @@
 
 from __future__ import annotations
+import uuid
 from typing import List, Optional, Type, TypeVar
 from pydantic import BaseModel, ValidationError
 import logging
@@ -54,15 +55,15 @@ class MongoRepository(Repository):
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
         return self.model_dto(**record)
 
-    def create(self, record_data: dict) -> model_dto:
+    def create(self, record_data: model_dto) -> model_dto:
         collection = self.db.db[self.table]
-        mongo_data = {**record_data, **{"_id": record_data["uuid"]}}
+        record_id = str(uuid.uuid4())
+        mongo_data = {**record_data.dict(), **{"_id": record_id}}
         try:
             collection.insert_one(mongo_data)
-            return self.read(record_id=record_data["uuid"])
+            return self.read(record_id=record_id)
         except DuplicateKeyError:
-            uuid = record_data.get("uuid")
-            error = f"Duplicate record uuid: '{uuid}'"
+            error = f"Duplicate record uuid: '{record_id}'"
             logger.info(error)
             raise DuplicateRecord(error)
 
@@ -70,14 +71,14 @@ class MongoRepository(Repository):
         collection = self.db.db[self.table]
         collection.delete_one({"uuid": record_id})
 
-    def update(self, record_id: str, record_data: dict) -> model_dto:
+    def update(self, record_id: str, record_data: model_dto) -> model_dto:
         collection = self.db.db[self.table]
         record: Optional[dict] = collection.find_one({"uuid": record_id})
         if not record:
             raise RecordNotFound(f"Record not found uuid: '{record_id}'")
 
         query = {"uuid": record_id}
-        record.update(record_data)
+        record.update(record_data.dict())
         updated_record: dict = collection.replace_one(
             query, record, upsert=True
         ).raw_result

@@ -19,4 +19,4 @@ router_v1 = CrudRouter(
     response_schema=EntityTypeDTO,
     create_schema=CreateEntityTypeDTO,
     update_schema=UpdateEntityTypeDTO,
-).router
+)

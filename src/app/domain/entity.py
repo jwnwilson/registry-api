@@ -15,8 +15,6 @@ from app.port.domain.entity_type import EntityTypeDTO
 from app.port.domain.file import FileDTO
 from app.port.domain.link_type import LinkDTO, LinkTypeDTO
 
-from .entity_type import list_entity_type
-from .entity_type import read as read_entity_type
 from .exceptions import EntityValidationError
 
 TABLE = "entity"
@@ -207,11 +205,6 @@ def create_entities_from_file(
     return entities
 
 
-def read(uuid: str, entity_type: str, db_adapter: DbAdapter) -> EntityDTO:
-    data = db_adapter.read(TABLE, uuid)
-    return EntityDTO(**data)
-
-
 def update(
     uuid: str,
     entity_data: UpdateEntityDTO,
@@ -228,8 +221,3 @@ def update(
     entity = EntityDTO(**data)
 
     return entity
-
-
-def delete(uuid: str, db_adapter: DbAdapter) -> None:
-    db_adapter.delete(table=TABLE, record_id=uuid)
-    return

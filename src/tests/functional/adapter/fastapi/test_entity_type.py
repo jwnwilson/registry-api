@@ -1,12 +1,12 @@
 def test_entity_type_list(client, test_data):
-    response = client.get("/entity-type/")
+    response = client.get("/api/v1/entity-type/")
     assert response.status_code == 200
     assert len(response.json()["items"]) == 3
 
 
 def test_entity_type_create(client, test_data, test_user):
     response = client.post(
-        "/entity-type/",
+        "/api/v1/entity-type/",
         json={
             "name": "supplier",
             "description": "",
@@ -24,7 +24,7 @@ def test_entity_type_create(client, test_data, test_user):
     assert "supplier" == response.json()["name"]
     assert "supplier_number" in response.json()["fields"]
 
-    response = client.get("/entity-type/")
+    response = client.get("/api/v1/entity-type/")
     assert response.status_code == 200
     assert len(response.json()["items"]) == 4
 
@@ -32,7 +32,7 @@ def test_entity_type_create(client, test_data, test_user):
 def test_entity_type_update(client, test_data, test_user):
     entity_uuid = test_data["productEntityType"]["uuid"]
     response = client.patch(
-        f"/entity-type/{entity_uuid}/",
+        f"/api/v1/entity-type/{entity_uuid}/",
         json={
             "name": "product_2",
             "description": "",
@@ -56,9 +56,9 @@ def test_entity_type_update(client, test_data, test_user):
 
 def test_entity_delete(client, test_data, test_user):
     entity_uuid = test_data["productEntityType"]["uuid"]
-    response = client.delete(f"/entity-type/{entity_uuid}/")
+    response = client.delete(f"/api/v1/entity-type/{entity_uuid}/")
     assert response.status_code == 201, response.json()
 
-    response = client.get("/entity-type/")
+    response = client.get("/api/v1/entity-type/")
     assert response.status_code == 200, response.json()
     assert len(response.json()["items"]) == 2
