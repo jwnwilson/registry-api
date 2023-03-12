@@ -1,8 +1,9 @@
 from abc import ABC
 from enum import Enum
+import json
 from typing import Any, Callable, List, Optional, Type, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.types import DecoratedCallable
 from pydantic import BaseModel
 
@@ -137,12 +138,14 @@ class CrudRouter(APIRouter):
 
     def _read_multi(self) -> Callable:
         def read_multiple_records(
+            filters: Optional[str] = "{}",
             repos: Repositories = Depends(self.repo_dependency),
             page_size: int = 0,
             page_number: int = 1,
         ) -> PaginatedData:  # type: ignore
+            filters = json.loads(filters)
             repositry: Repository = getattr(repos, self.repository)
-            return repositry.read_multi(filters={}, page_size=page_size, page_number=page_number)
+            return repositry.read_multi(filters=filters, page_size=page_size, page_number=page_number)
 
         return read_multiple_records
 

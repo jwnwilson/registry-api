@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 router_v1 = CrudRouter(
     repo_dependency=get_repo,
-    respository="entity_type",
+    respository="entity",
     methods=["CREATE", "READ", "UPDATE", "DELETE"],
     response_schema=EntityDTO,
     create_schema=CreateEntityDTO,
