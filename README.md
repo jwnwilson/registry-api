@@ -25,6 +25,7 @@ POST /entity/<type>/upload
 
 ## TODO
 
+- Fix relationship creation
 - Call entity domain logic from entity repository
 - Add entity-type filter to entity endpoints
 - Add tests
